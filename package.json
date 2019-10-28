@@ -1,7 +1,6 @@
 {
   "name": "chem-grid",
   "version": "0.1.0",
-  "private": true,
   "main": "src/index.js",
   "author": "atomjaylee",
   "repository": {
