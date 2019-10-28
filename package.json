@@ -4,9 +4,14 @@
   "private": true,
   "main": "src/index.js",
   "author": "atomjaylee",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MiracleWorkers/chem-grid"
+  },
   "scripts": {
     "serve": "vue-cli-service serve",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "publish": "npm publish"
   },
   "dependencies": {
     "ag-grid-community": "^21.2.2",
