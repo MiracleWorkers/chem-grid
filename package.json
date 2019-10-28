@@ -1,0 +1,28 @@
+{
+  "name": "chem-grid",
+  "version": "0.1.0",
+  "private": true,
+  "main": "src/index.js",
+  "author": "atomjaylee",
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "ag-grid-community": "^21.2.2",
+    "ag-grid-vue": "^21.2.2",
+    "chem-table-enterprise": "^0.1.0",
+    "core-js": "^3.3.2",
+    "vue": "^2.6.10",
+    "vue-property-decorator": "^8.3.0"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "^4.0.0",
+    "@vue/cli-plugin-eslint": "^4.0.0",
+    "@vue/cli-service": "^4.0.0",
+    "babel-eslint": "^10.0.3",
+    "eslint": "^5.16.0",
+    "eslint-plugin-vue": "^5.0.0",
+    "vue-template-compiler": "^2.6.10"
+  }
+}
