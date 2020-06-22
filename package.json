@@ -1,7 +1,22 @@
 {
   "name": "chem-grid",
   "version": "0.2.0",
-  "private": true,
+  "main": "src/index.js",
+  "typings": "types/table.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MiracleWorkers/chem-grid"
+  },
+  "keywords": [
+    "vue",
+    "ag-grid",
+    "table",
+    "grid",
+    "scheme",
+    "schema",
+    "json",
+    ""
+  ],
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
