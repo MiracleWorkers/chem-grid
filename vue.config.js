@@ -1,9 +1,12 @@
 module.exports = {
-  pages: {
-    index: {
-      entry: 'examples/main',
-      template: 'public/index.html',
-      filename: 'index.html',
-    }
+  devServer: {
+    port: '8081'
+  },
+  chainWebpack: config => {
+    config.entryPoints
+      .clear()
+      .end()
+      .entry('app')
+      .add('./example/main.js');
   }
-}
+};

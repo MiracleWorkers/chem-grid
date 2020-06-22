@@ -1,24 +1,20 @@
 # chem-grid
 
-## Project setup
-```
-yarn install
+## 安装
+
+```bash
+npm install chem-grid --save
 ```
 
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
+## 使用
 
-### Compiles and minifies for production
-```
-yarn build
-```
+```javascript
+import chemGrid from 'chem-grid';
+import Axios from './axios'; // 数据请求的实例
 
-### Lints and fixes files
+Vue.use(chemGrid, {
+  tagName: 'chemGrid',
+  httpInstance: Axios,
+  sortProperty: 'query_order_by'
+});
 ```
-yarn lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
