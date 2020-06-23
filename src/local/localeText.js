@@ -79,10 +79,10 @@ const localeText = {
   expandAll: 'laOpen-em-up',
   collapseAll: 'laClose-em-up',
   toolPanel: 'laTool Panel',
-  export: 'laExporto',
-  csvExport: 'laCSV Exportp',
-  excelExport: 'laExcel Exporto (.xlsx)',
-  excelXmlExport: 'laExcel Exporto (.xml)',
+  export: '导出',
+  csvExport: '导出 CSV',
+  excelExport: '导出 Excel(.xlsx)',
+  excelXmlExport: '导出 Excel(.xml)',
 
   // enterprise menu (charts)
   pivotChartAndPivotMode: 'laPivot Chart & Pivot Mode',
@@ -132,11 +132,11 @@ const localeText = {
   totalAndFilteredRows: 'laRows',
 
   // standard menu
-  copy: 'laCopy',
-  copyWithHeaders: 'laCopy With Headers',
-  ctrlC: 'laCtrl n C',
-  paste: 'laPaste',
-  ctrlV: 'laCtrl n V',
+  copy: '复制',
+  copyWithHeaders: '复制 + 标题',
+  ctrlC: 'Ctrl + C',
+  paste: '粘贴',
+  ctrlV: 'Ctrl + V',
 
   // charts
   pivotChartTitle: 'laPivot Chart',

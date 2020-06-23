@@ -1,5 +1,6 @@
 import { AgGridVue } from 'ag-grid-vue';
 import localeText from './local/localeText';
+import 'chem-table-enterprise';
 
 import mixinSource from './mixins/TableSource';
 import mixinIframeComponents from './render/RenderSlotComponents';
@@ -148,7 +149,8 @@ export default {
       {
         class: 'ag-theme-balham',
         attrs: {
-          gridOptions: this.localGridOption
+          gridOptions: this.localGridOption,
+          enableRangeSelection: true
         },
         on: {
           sortChanged: this.listenSortChange,

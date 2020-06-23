@@ -1647,15 +1647,15 @@ address@^1.1.2:
   resolved "https://registry.npm.taobao.org/address/download/address-1.1.2.tgz#bf1116c9c758c51b7a933d296b72c221ed9428b6"
   integrity sha1-vxEWycdYxRt6kz0pa3LCIe2UKLY=
 
-ag-grid-community@^23.2.0:
-  version "23.2.0"
-  resolved "https://registry.npm.taobao.org/ag-grid-community/download/ag-grid-community-23.2.0.tgz#889f52e8eb91c167c2ac7477938cbf498a54f67c"
-  integrity sha1-iJ9S6OuRwWfCrHR3k4y/SYpU9nw=
+ag-grid-community@^23.2.1:
+  version "23.2.1"
+  resolved "https://registry.npmjs.org/ag-grid-community/-/ag-grid-community-23.2.1.tgz#0cf2beb7ba2fcf66a4865e45faabdbea173d59b6"
+  integrity sha512-WHfDV7mFsd6eQJ5yOu26nnpnW7Gd02zcp9LHHfKQky8lfgTEo382qcja7MibHzB2f5vOCBdQnOPsWrbBNKRzhQ==
 
-ag-grid-vue@^23.2.0:
-  version "23.2.0"
-  resolved "https://registry.npm.taobao.org/ag-grid-vue/download/ag-grid-vue-23.2.0.tgz#3031b087a8ece99a89e6dcc32dd8cdca1189fad3"
-  integrity sha1-MDGwh6js6ZqJ5tzDLdjNyhGJ+tM=
+ag-grid-vue@^23.2.1:
+  version "23.2.1"
+  resolved "https://registry.npmjs.org/ag-grid-vue/-/ag-grid-vue-23.2.1.tgz#f952b4f1ea124bc7569fc4cf916d85a7d404d660"
+  integrity sha512-bj4IkXpIZMuS0GBeIfCRzgMMlIy9Dr+8E5S9pOIYkvxmzmtz2pV/r+FjdCqlXCI79zMXRJku2liqPQa3bRgD6A==
 
 aggregate-error@^3.0.0:
   version "3.0.1"
@@ -2574,6 +2574,11 @@ check-types@^8.0.3:
   version "8.0.3"
   resolved "https://registry.npm.taobao.org/check-types/download/check-types-8.0.3.tgz#3356cca19c889544f2d7a95ed49ce508a0ecf552"
   integrity sha1-M1bMoZyIlUTy16le1JzlCKDs9VI=
+
+chem-table-enterprise@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.npmjs.org/chem-table-enterprise/-/chem-table-enterprise-1.0.2.tgz#469691efcd39007196f433f9313112d796701af2"
+  integrity sha512-xBLq1hnTbrJ8Qn8afCdj8u6s7lmwmC0JdLzQ/ytzIYjosEgYnFOcc6oAnb7xhKWNvyd0k0Qa+zWWfsOYw+TpRQ==
 
 chokidar@^2.1.8:
   version "2.1.8"
@@ -9499,8 +9504,8 @@ vm-browserify@^1.0.1:
 
 vue-class-component@^7.2.3:
   version "7.2.3"
-  resolved "https://registry.npm.taobao.org/vue-class-component/download/vue-class-component-7.2.3.tgz#a5b1abd53513a72ad51098752e2dedd499807cca"
-  integrity sha1-pbGr1TUTpyrVEJh1Li3t1JmAfMo=
+  resolved "https://registry.npmjs.org/vue-class-component/-/vue-class-component-7.2.3.tgz#a5b1abd53513a72ad51098752e2dedd499807cca"
+  integrity sha512-oEqYpXKaFN+TaXU+mRLEx8dX0ah85aAJEe61mpdoUrq0Bhe/6sWhyZX1JjMQLhVsHAkncyhedhmCdDVSasUtDw==
 
 vue-eslint-parser@^7.0.0:
   version "7.1.0"
@@ -9546,10 +9551,10 @@ vue-loader@^15.9.2:
     vue-hot-reload-api "^2.3.0"
     vue-style-loader "^4.1.0"
 
-vue-property-decorator@^8.5.0:
-  version "8.5.0"
-  resolved "https://registry.npm.taobao.org/vue-property-decorator/download/vue-property-decorator-8.5.0.tgz#9af64c5301413f4732640cc0d046879417e64994"
-  integrity sha1-mvZMUwFBP0cyZAzA0EaHlBfmSZQ=
+vue-property-decorator@^9.0.0:
+  version "9.0.0"
+  resolved "https://registry.npmjs.org/vue-property-decorator/-/vue-property-decorator-9.0.0.tgz#0a5f6d47d33ca62a8876108ccfa65c2c4fb7325a"
+  integrity sha512-oegTNPItuHOkW0AP1MnbdNwkmyhfsUIIXvIRHpgC18tVoEo21/i6kItyeekjMs8JgZJeuHzsaTc/DZaJFH4IWQ==
 
 vue-style-loader@^4.1.0, vue-style-loader@^4.1.2:
   version "4.1.2"
