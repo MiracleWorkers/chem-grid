@@ -1,8 +1,13 @@
 import Vue from 'vue';
+import RenderPagination from '../render/RenderPagination';
+
 export default {
   methods: {
+    // 表格用到的自定义组件注册，其中包含 配置项中对应的slot + 自定义组件(如分页器)
     $_registerSlotComponents() {
       const _components = {};
+
+      // ScopedSlotComponents
       const _scopedSlots = this.$scopedSlots;
       Object.keys(_scopedSlots).forEach(key => {
         _components[key] = Vue.extend({
@@ -28,6 +33,10 @@ export default {
           }
         });
       });
+
+      // CustomComponents
+      _components['renderPagination'] = RenderPagination;
+
       return _components;
     }
   }

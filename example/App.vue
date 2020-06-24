@@ -1,10 +1,10 @@
 <template>
   <div>
     <login />
-    <chem-table ref="table" style="width:800px;height: 400px" :config="tableConfig" :params="tableParams"></chem-table>
+    <chem-table ref="table" style="width:900px;height: 400px" :config="tableConfig" :params="tableParams"></chem-table>
     <chem-table ref="table" style="width:800px;height: 400px" :config="tableConfig2" :params="tableParams2">
       <template #commodity_num="{model, $index}">
-        <span>{{ model.commodity_num }} - {{ $index }}</span>
+        <span>{{ model.commodity_num }} - {{ $index }} - 嘿嘿</span>
       </template>
     </chem-table>
   </div>

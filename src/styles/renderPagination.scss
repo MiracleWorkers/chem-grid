@@ -1,0 +1,72 @@
+// -------- 分页器 --------
+
+$PAGINATION_HEIGHT: 40px;
+$PAGINATION_BUTTON_SIZE: 22px;
+$PAGINATION_BUTTON_COLOR: #1890ff;
+
+.render_pagination {
+  height: $PAGINATION_HEIGHT;
+
+  ul {
+    list-style: none;
+    margin-top: ($PAGINATION_HEIGHT - $PAGINATION_BUTTON_SIZE) / 2;
+  }
+
+  li {
+    display: table-cell;
+    min-width: $PAGINATION_BUTTON_SIZE;
+    height: $PAGINATION_BUTTON_SIZE;
+    border: 1px solid transparent;
+    text-align: center;
+    outline: none;
+    border-radius: 2px;
+    vertical-align: middle;
+    &[data-index]:hover {
+      cursor: pointer;
+      color: $PAGINATION_BUTTON_COLOR;
+    }
+  }
+
+  .pagination-item_active {
+    color: $PAGINATION_BUTTON_COLOR;
+    border-color: $PAGINATION_BUTTON_COLOR;
+    font-weight: bold;
+  }
+
+  .pagination-button_disabled {
+    cursor: not-allowed;
+    &:hover {
+      color: rgba(0, 0, 0, 0.38);
+    }
+  }
+
+  // 输入框跳转
+  .quick-input {
+    display: table-cell;
+    min-width: 100px;
+    vertical-align: middle;
+    input {
+      display: table-cell;
+      width: 30px;
+      outline: none;
+      border: 1px solid #d9d9d9;
+      background-color: #fff;
+      background-image: none;
+      border-radius: 2px;
+      text-align: center;
+      margin: 0 2px;
+      caret-color: $PAGINATION_BUTTON_COLOR;
+      &:focus {
+        border-color: $PAGINATION_BUTTON_COLOR;
+      }
+    }
+    // 去除number input的上下箭头
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+    }
+    input[type='number'] {
+      -moz-appearance: textfield;
+    }
+  }
+}

@@ -3,7 +3,7 @@ import localeText from './local/localeText';
 import 'chem-table-enterprise';
 
 import mixinSource from './mixins/TableSource';
-import mixinIframeComponents from './render/RenderSlotComponents';
+import mixinIframeComponents from './mixins/TableSlotComponents';
 import { defaultTableConfig, defaultTableItemConfig } from './DefaultConfig';
 
 export default {
@@ -57,7 +57,6 @@ export default {
         ...this.config
       };
       const _columnDefs = [];
-      const _customAttr = {};
       if (multiple || defaultTableConfig.multiple) {
         _columnDefs.push({
           pinned: 'left',
@@ -65,8 +64,6 @@ export default {
           checkboxSelection: true,
           headerCheckboxSelection: true
         });
-        _customAttr.rowSelection = 'multiple';
-        _customAttr.suppressRowClickSelection = true;
       }
       if (showIndex || defaultTableConfig.showIndex) {
         _columnDefs.push({
@@ -100,15 +97,22 @@ export default {
         _columnDefs.push(_column);
       });
 
+      const statusBarConfig = {
+        statusPanels: [{ statusPanel: 'renderPagination' }]
+      };
+
       return {
         columnDefs: _columnDefs,
         pagination: hasPage,
         rowModelType: infiniteScroll ? 'infinite' : 'clientSide',
         localeText: Object.freeze(localeText),
+        rowSelection: 'multiple',
+        suppressRowClickSelection: true,
         suppressMultiSort: true,
+        enableRangeSelection: true,
         sortingOrder: sortConfig,
         frameworkComponents: this.$_registerSlotComponents(),
-        ..._customAttr,
+        statusBar: statusBarConfig,
         ...this.$attrs
       };
     }
@@ -149,8 +153,7 @@ export default {
       {
         class: 'ag-theme-balham',
         attrs: {
-          gridOptions: this.localGridOption,
-          enableRangeSelection: true
+          gridOptions: this.localGridOption
         },
         on: {
           sortChanged: this.listenSortChange,
