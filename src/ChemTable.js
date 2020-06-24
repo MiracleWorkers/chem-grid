@@ -11,6 +11,11 @@ export default {
   inheritAttrs: false,
   components: { AgGridVue },
   mixins: [mixinSource, mixinIframeComponents],
+  provide() {
+    return {
+      Provider: this
+    };
+  },
   props: {
     config: {
       required: true,
@@ -31,7 +36,13 @@ export default {
       columnApi: null,
       localParams: this.params,
       localSelected: [],
-      rowKey: this.config.rowKey || defaultTableConfig.rowKey
+      rowKey: this.config.rowKey || defaultTableConfig.rowKey,
+      pagination: {
+        pageCount: this.config.pageCount || defaultTableConfig.pageCount,
+        pageSize: 10,
+        total: 120,
+        currentPage: 1
+      }
     };
   },
   watch: {

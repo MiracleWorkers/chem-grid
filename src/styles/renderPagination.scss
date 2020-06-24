@@ -34,9 +34,9 @@ $PAGINATION_BUTTON_COLOR: #1890ff;
   }
 
   .pagination-button_disabled {
-    cursor: not-allowed;
     &:hover {
-      color: rgba(0, 0, 0, 0.38);
+      cursor: not-allowed !important;
+      color: rgba(0, 0, 0, 0.38) !important;
     }
   }
 

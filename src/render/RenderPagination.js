@@ -1,88 +1,69 @@
 import '../styles/renderPagination.scss';
 import Vue from 'vue';
 
+/**
+ * -----------------------
+ *  组件内部使用的数据被定义在父组件中，直接通过Provide/Inject来获取父组件中的值，然后进行操作
+ *  注意: 该组件数据流不为单项数据流，直接修改了父组件的值
+ * -----------------------
+ */
 const pagination = {
-  props: {
-    pageCount: {
-      type: Number,
-      default: 10
-    },
-    total: {
-      type: Number,
-      default: 350
-    },
-    pageSize: {
-      type: Number,
-      default: 10
-    },
-    currentPage: {
-      type: Number,
-      default: 1
-    }
-  },
-  data() {
-    return {
-      local_currentPage: this.currentPage,
-      local_pageSize: this.pageSize,
-      local_total: this.total,
-      local_pageCount: this.pageCount
-    };
-  },
+  inject: ['Provider'],
   computed: {
     maxPage() {
-      return Math.ceil(this.local_total / this.local_pageSize);
+      const { pageSize, total } = this.Provider.pagination;
+      return Math.ceil(total / pageSize);
     },
     dynamicPageList() {
-      if (this.local_pageCount >= this.maxPage) {
+      const { currentPage, pageCount } = this.Provider.pagination;
+      if (pageCount >= this.maxPage) {
         return Array.from({ length: this.maxPage }, (_, index) => index + 1);
       }
       let firstNum, latterNum;
-      let halfNum = Math.ceil(this.local_pageCount / 2);
-      if (this.maxPage - this.local_currentPage <= halfNum) {
-        latterNum = this.maxPage - this.local_currentPage;
-        firstNum = this.local_pageCount - latterNum - 1;
-      } else if (this.local_currentPage < halfNum) {
-        firstNum = this.local_currentPage - 1;
-        latterNum = this.local_pageCount - firstNum - 1;
+      let halfNum = Math.ceil(pageCount / 2);
+      if (this.maxPage - currentPage <= halfNum) {
+        latterNum = this.maxPage - currentPage;
+        firstNum = pageCount - latterNum - 1;
+      } else if (currentPage < halfNum) {
+        firstNum = currentPage - 1;
+        latterNum = pageCount - firstNum - 1;
       } else {
         latterNum = halfNum;
-        firstNum = this.local_pageCount - halfNum - 1;
+        firstNum = pageCount - halfNum - 1;
       }
-      const preList = Array.from({ length: firstNum }, (_, index) => this.local_currentPage - (index + 1)).reverse();
-      const nextList = Array.from({ length: latterNum }, (_, index) => this.local_currentPage + (index + 1));
-      return [...preList, this.local_currentPage, ...nextList];
+      const preList = Array.from({ length: firstNum }, (_, index) => currentPage - (index + 1)).reverse();
+      const nextList = Array.from({ length: latterNum }, (_, index) => currentPage + (index + 1));
+      return [...preList, currentPage, ...nextList];
     }
   },
   render() {
+    const { currentPage } = this.Provider.pagination;
     const showFirstButton = this.dynamicPageList.indexOf(1) === -1;
     const showLastButton = this.dynamicPageList.indexOf(this.maxPage) === -1;
     return (
       <div class="render_pagination">
         <ul onClick={this.handlePaginationLink}>
           {showFirstButton ? (
-            <li class={this.local_currentPage === 1 ? 'pagination-button_disabled' : null} data-index="first">
+            <li class={currentPage === 1 ? 'pagination-button_disabled' : null} data-index="first">
               <span class="ag-icon ag-icon-first" data-index="first"></span>
             </li>
           ) : null}
-          <li class={this.local_currentPage === 1 ? 'pagination-button_disabled' : null} data-index="preIndex">
+          <li class={currentPage === 1 ? 'pagination-button_disabled' : null} data-index="preIndex">
             <span class="ag-icon ag-icon-expanded" data-index="preIndex"></span>
           </li>
           {this.dynamicPageList.map(index => {
-            const currentActiveStatus = this.local_currentPage === index ? 'pagination-item_active' : null;
+            const currentActiveStatus = currentPage === index ? 'pagination-item_active' : null;
             return (
               <li tabindex="0" data-index={index} class={currentActiveStatus}>
                 {index}
               </li>
             );
           })}
-          <li
-            class={this.local_currentPage === this.maxPage ? 'pagination-button_disabled' : null}
-            data-index="nextIndex"
-          >
+          <li class={currentPage === this.maxPage ? 'pagination-button_disabled' : null} data-index="nextIndex">
             <span class="ag-icon ag-icon-contracted" data-index="nextIndex"></span>
           </li>
           {showLastButton ? (
-            <li class={this.local_currentPage === this.maxPage ? 'pagination-button_disabled' : null} data-index="last">
+            <li class={currentPage === this.maxPage ? 'pagination-button_disabled' : null} data-index="last">
               <span class="ag-icon ag-icon-last" data-index="last"></span>
             </li>
           ) : null}
@@ -103,29 +84,29 @@ const pagination = {
           evt.target.value = null;
           return;
         }
-        this.local_currentPage = +evt.target.value;
+        this.Provider.pagination.currentPage = +evt.target.value;
         evt.target.value = null;
       }
     },
     handlePaginationLink(bubbleEvent) {
       const { index } = bubbleEvent.target.dataset;
+      const { currentPage } = this.Provider.pagination;
       if (!index) return;
       switch (index) {
         case 'first':
-          this.local_currentPage = 1;
+          this.Provider.pagination.currentPage = 1;
           break;
         case 'preIndex':
-          this.local_currentPage = this.local_currentPage - 1 > 0 ? this.local_currentPage - 1 : this.local_currentPage;
+          this.Provider.pagination.currentPage = currentPage - 1 > 0 ? currentPage - 1 : currentPage;
           break;
         case 'nextIndex':
-          this.local_currentPage =
-            this.local_currentPage + 1 > this.maxPage ? this.local_currentPage : this.local_currentPage + 1;
+          this.Provider.pagination.currentPage = currentPage + 1 > this.maxPage ? currentPage : currentPage + 1;
           break;
         case 'last':
-          this.local_currentPage = this.maxPage;
+          this.Provider.pagination.currentPage = this.maxPage;
           break;
         default:
-          this.local_currentPage = index * 1;
+          this.Provider.pagination.currentPage = index * 1;
       }
     }
   }

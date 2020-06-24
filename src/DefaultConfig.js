@@ -7,7 +7,8 @@ const defaultTableConfig = {
   sortable: true,
   sortConfig: ['desc', 'asc', null],
   multiple: false,
-  showIndex: true
+  showIndex: true,
+  pageCount: 7
 };
 
 const defaultTableItemConfig = {

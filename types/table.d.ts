@@ -10,6 +10,7 @@ export interface ITableConfig {
   url?: string;
   pipe?: Function;
   sortConfig?: string[];
+  pageCount?: number;
   items: ITableItemConfig[];
 }
 
