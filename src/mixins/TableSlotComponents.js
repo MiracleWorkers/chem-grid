@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import RenderPagination from '../render/RenderPagination';
+import RenderPaginationTotal from '../render/RenderPaginationTotal';
 
 export default {
   methods: {
@@ -36,6 +37,7 @@ export default {
 
       // CustomComponents
       _components['renderPagination'] = RenderPagination;
+      _components['renderPaginationTotal'] = RenderPaginationTotal;
 
       return _components;
     }

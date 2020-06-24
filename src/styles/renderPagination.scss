@@ -4,6 +4,10 @@ $PAGINATION_HEIGHT: 40px;
 $PAGINATION_BUTTON_SIZE: 22px;
 $PAGINATION_BUTTON_COLOR: #1890ff;
 
+.render_pagination-total {
+  line-height: $PAGINATION_HEIGHT;
+}
+
 .render_pagination {
   height: $PAGINATION_HEIGHT;
 
@@ -14,16 +18,18 @@ $PAGINATION_BUTTON_COLOR: #1890ff;
 
   li {
     display: table-cell;
+    vertical-align: middle;
     min-width: $PAGINATION_BUTTON_SIZE;
     height: $PAGINATION_BUTTON_SIZE;
     border: 1px solid transparent;
     text-align: center;
     outline: none;
     border-radius: 2px;
-    vertical-align: middle;
-    &[data-index]:hover {
+    &[data-index] {
       cursor: pointer;
-      color: $PAGINATION_BUTTON_COLOR;
+      &:hover {
+        color: $PAGINATION_BUTTON_COLOR;
+      }
     }
   }
 
@@ -33,11 +39,16 @@ $PAGINATION_BUTTON_COLOR: #1890ff;
     font-weight: bold;
   }
 
-  .pagination-button_disabled {
-    &:hover {
+  .pagination-disabled {
+    opacity: 0.3;
+    li[data-index] {
       cursor: not-allowed !important;
-      color: rgba(0, 0, 0, 0.38) !important;
     }
+  }
+
+  .pagination-button_disabled {
+    cursor: not-allowed !important;
+    color: rgba(0, 0, 0, 0.38);
   }
 
   // 输入框跳转

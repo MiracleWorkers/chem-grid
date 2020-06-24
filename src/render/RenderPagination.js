@@ -37,12 +37,12 @@ const pagination = {
     }
   },
   render() {
-    const { currentPage } = this.Provider.pagination;
+    const { currentPage, disabled } = this.Provider.pagination;
     const showFirstButton = this.dynamicPageList.indexOf(1) === -1;
     const showLastButton = this.dynamicPageList.indexOf(this.maxPage) === -1;
     return (
       <div class="render_pagination">
-        <ul onClick={this.handlePaginationLink}>
+        <ul onClick={this.handlePaginationLink} class={disabled ? 'pagination-disabled' : null}>
           {showFirstButton ? (
             <li class={currentPage === 1 ? 'pagination-button_disabled' : null} data-index="first">
               <span class="ag-icon ag-icon-first" data-index="first"></span>
@@ -69,7 +69,7 @@ const pagination = {
           ) : null}
           <li class="quick-input">
             <span>跳至</span>
-            <input type="number" onKeyup={this.handleQuickLink} />
+            <input type="number" disabled={disabled} onKeyup={this.handleQuickLink} />
             <span>页</span>
           </li>
         </ul>
@@ -86,6 +86,7 @@ const pagination = {
         }
         this.Provider.pagination.currentPage = +evt.target.value;
         evt.target.value = null;
+        this.Provider.$_fetchSourceData();
       }
     },
     handlePaginationLink(bubbleEvent) {
@@ -108,6 +109,8 @@ const pagination = {
         default:
           this.Provider.pagination.currentPage = index * 1;
       }
+      if (this.Provider.pagination.currentPage === currentPage) return;
+      this.Provider.$_fetchSourceData();
     }
   }
 };

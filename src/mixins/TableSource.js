@@ -7,19 +7,30 @@ export default {
       this.showGridLoading();
       try {
         let fetchResponse = await this.$GRID_HTTP_INSTANCE(this.config.url, {
-          params: filterObjectNull(this.localParams)
+          params: filterObjectNull({
+            ...this.localParams,
+            currentPage: this.pagination.currentPage,
+            pageSize: this.pagination.pageSize
+          })
         });
-        // 通过处理函数管道进行数据手动处理
+        // 1. 通过处理函数管道进行数据手动处理
         if (pipe && isFunction(pipe)) {
           fetchResponse = pipe(fetchResponse);
         }
-        const { customPageList, customTotal = {} } = fetchResponse;
+        const {
+          customPageList,
+          customTotal = {},
+          page: { totalItem = 10 }
+        } = fetchResponse;
         this.gridApi.setRowData(customPageList);
-        // 设置统计信息
+        // 2. 设置统计信息
         if (customTotal && Object.keys(customTotal).length) {
           this.gridApi.setPinnedBottomRowData([{ _rowNum: '合计', ...customTotal }]);
         }
+        // 3. 重新勾选之前选中
         this.$_checkSelectedRow();
+        // 4. 分页信息设置
+        this.pagination.total = totalItem;
       } finally {
         this.hideGridLoading();
       }

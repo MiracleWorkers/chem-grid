@@ -11,8 +11,8 @@ const localeText = {
   loadingOoo: '正在加载...',
 
   // for set filter
-  selectAll: 'Select All',
-  searchOoo: 'Search...',
+  selectAll: '选择全部',
+  searchOoo: '查找...',
   blanks: 'Blanks',
 
   // for number filter and text filter
@@ -69,13 +69,13 @@ const localeText = {
   enabled: 'Enabled',
 
   // enterprise menu
-  pinColumn: 'laPin Column',
+  pinColumn: '固定列',
   valueAggregation: 'laValue Agg',
-  autosizeThiscolumn: 'laAutosize Diz',
-  autosizeAllColumns: 'laAutsoie em All',
+  autosizeThiscolumn: '本列自动宽度',
+  autosizeAllColumns: '所有列自动宽度',
   groupBy: 'laGroup by',
   ungroupBy: 'laUnGroup by',
-  resetColumns: 'laReset Those Cols',
+  resetColumns: '重置所有列',
   expandAll: 'laOpen-em-up',
   collapseAll: 'laClose-em-up',
   toolPanel: 'laTool Panel',
@@ -115,9 +115,9 @@ const localeText = {
   normalizedArea: 'la100% Stacked',
 
   // enterprise menu pinning
-  pinLeft: 'laPin <<',
-  pinRight: 'laPin >>',
-  noPin: 'laDontPin <>',
+  pinLeft: '左边',
+  pinRight: '右边',
+  noPin: '取消固定',
 
   // enterprise menu aggregation and status bar
   sum: 'laSum',

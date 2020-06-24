@@ -39,9 +39,10 @@ export default {
       rowKey: this.config.rowKey || defaultTableConfig.rowKey,
       pagination: {
         pageCount: this.config.pageCount || defaultTableConfig.pageCount,
-        pageSize: 10,
-        total: 120,
-        currentPage: 1
+        pageSize: 100,
+        total: 10,
+        currentPage: 1,
+        disabled: false
       }
     };
   },
@@ -63,7 +64,7 @@ export default {
   computed: {
     localGridOption() {
       if (this.validateConfig(this.config) === false) return {};
-      const { hasPage, infiniteScroll, sortable, items, showIndex, multiple, sortConfig, url } = {
+      const { infiniteScroll, sortable, items, showIndex, multiple, sortConfig, url } = {
         ...defaultTableConfig,
         ...this.config
       };
@@ -98,6 +99,8 @@ export default {
           hide: item.hide || defaultTableItemConfig.hide,
           width: item.width || null,
           resizable: true,
+          filter: true,
+          menuTabs: ['generalMenuTab', 'filterMenuTab'],
           valueFormatter: ({ value, data }) => {
             if (item.formatter) return item.formatter.call(null, value, data);
             return value;
@@ -109,12 +112,11 @@ export default {
       });
 
       const statusBarConfig = {
-        statusPanels: [{ statusPanel: 'renderPagination' }]
+        statusPanels: [{ statusPanel: 'renderPaginationTotal', align: 'left' }, { statusPanel: 'renderPagination' }]
       };
 
       return {
         columnDefs: _columnDefs,
-        pagination: hasPage,
         rowModelType: infiniteScroll ? 'infinite' : 'clientSide',
         localeText: Object.freeze(localeText),
         rowSelection: 'multiple',
@@ -141,9 +143,11 @@ export default {
       return true;
     },
     showGridLoading() {
+      this.pagination.disabled = true;
       this.gridApi.showLoadingOverlay();
     },
     hideGridLoading() {
+      this.pagination.disabled = false;
       this.gridApi.hideOverlay();
     },
     // ag-grid可以进行多column排序，但日常业务中不多见，此处仅处理单sort的情况
