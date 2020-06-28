@@ -21,7 +21,8 @@ export default {
         pageSize: -2
       },
       tableConfig: {
-        multiple: true,
+        multiple: false,
+        // infiniteScroll: true,
         url: '/pri/other_storage/get_goodseat_commodity_detail',
         items: [
           { column: 'company_name', label: '门店名称' },

@@ -67,6 +67,15 @@ const pagination = {
               <span class="ag-icon ag-icon-last" data-index="last"></span>
             </li>
           ) : null}
+          <li class="select_pagination-size">
+            <span class="ag-icon ag-icon-small-down"></span>
+            <select vModel={this.Provider.pagination.pageSize} onChange={this.handlePageSizeChange}>
+              <option>10</option>
+              <option>50</option>
+              <option>100</option>
+              <option>1000</option>
+            </select>
+          </li>
           <li class="quick-input">
             <span>跳至</span>
             <input type="number" disabled={disabled} onKeyup={this.handleQuickLink} />
@@ -77,6 +86,10 @@ const pagination = {
     );
   },
   methods: {
+    handlePageSizeChange() {
+      this.Provider.pagination.currentPage = 1;
+      this.$nextTick(() => this.Provider.$_fetchSourceData());
+    },
     handleQuickLink(evt) {
       if (evt.keyCode !== 13) return;
       if (!!evt.target.value) {

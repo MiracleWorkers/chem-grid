@@ -48,7 +48,7 @@ $PAGINATION_BUTTON_COLOR: #1890ff;
 
   .pagination-button_disabled {
     cursor: not-allowed !important;
-    color: rgba(0, 0, 0, 0.38);
+    color: rgba(0, 0, 0, 0.38) !important;
   }
 
   // 输入框跳转
@@ -78,6 +78,35 @@ $PAGINATION_BUTTON_COLOR: #1890ff;
     }
     input[type='number'] {
       -moz-appearance: textfield;
+    }
+  }
+
+  .select_pagination-size {
+    position: relative;
+    width: 54px;
+
+    .ag-icon {
+      position: absolute;
+      right: 2px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+
+    select {
+      width: 54px;
+      height: 20px;
+      outline: none;
+      border: 1px solid #d9d9d9;
+      border-radius: 2px;
+      appearance: none;
+      -moz-appearance: none;
+      -webkit-appearance: none;
+      cursor: pointer;
+      padding: 0 10px 0 4px;
+      &::-ms-expand {
+        display: none;
+      }
     }
   }
 }

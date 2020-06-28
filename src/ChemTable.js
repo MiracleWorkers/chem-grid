@@ -39,7 +39,7 @@ export default {
       rowKey: this.config.rowKey || defaultTableConfig.rowKey,
       pagination: {
         pageCount: this.config.pageCount || defaultTableConfig.pageCount,
-        pageSize: 100,
+        pageSize: 50,
         total: 10,
         currentPage: 1,
         disabled: false
@@ -74,6 +74,7 @@ export default {
           pinned: 'left',
           width: 40,
           checkboxSelection: true,
+          suppressMenu: true,
           headerCheckboxSelection: true
         });
       }
@@ -83,9 +84,12 @@ export default {
           field: '_rowNum',
           pinned: 'left',
           width: 50,
-          valueGetter: function(params) {
+          suppressMenu: true,
+          valueGetter: params => {
             const value = params.data._rowNum;
-            return value ? value : params.node.rowIndex + 1;
+            const _currentPage = this.pagination.currentPage;
+            const _pageSize = this.pagination.pageSize;
+            return value ? value : (_currentPage - 1) * _pageSize + params.node.rowIndex + 1;
           },
           resizable: true
         });
