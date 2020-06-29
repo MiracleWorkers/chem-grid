@@ -1,4 +1,4 @@
-export interface ITableConfig {
+interface ITableConfig {
   rowKey?: string;
   hasPage?: boolean;
   isLoopSelect?: boolean;
@@ -12,9 +12,10 @@ export interface ITableConfig {
   sortConfig?: string[];
   pageCount?: number;
   items: ITableItemConfig[];
+  buttons?: ITableOperateConfig;
 }
 
-export interface ITableItemConfig {
+interface ITableItemConfig {
   column: string;
   label: string;
   width: number;
@@ -23,4 +24,11 @@ export interface ITableItemConfig {
   formatter?: Function;
   pin?: 'left' | 'right' | null;
   hide?: boolean;
+}
+
+interface ITableOperateConfig {
+  label: string;
+  auth?: string;
+  show?: boolean | Function<boolean>;
+  click: Function;
 }

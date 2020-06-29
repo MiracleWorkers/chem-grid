@@ -1,18 +1,19 @@
 <template>
   <div>
     <login />
-    <chem-table
+    <chem-grid
       ref="table"
       style="width:900px;height: 400px"
       :config="tableConfig"
       :params="tableParams"
+      :auth="tableAuth"
       @row-select="handleRowSelect"
-    ></chem-table>
-    <chem-table ref="table" style="width:800px;height: 400px" :config="tableConfig2" :params="tableParams2">
+    ></chem-grid>
+    <chem-grid ref="table" style="width:800px;height: 400px" :config="tableConfig2" :params="tableParams2">
       <template #commodity_num="{model, $index}">
         <span>{{ model.commodity_num }} - {{ $index }} - 嘿嘿</span>
       </template>
-    </chem-table>
+    </chem-grid>
   </div>
 </template>
 
@@ -22,6 +23,10 @@ export default {
   components: { Login },
   data() {
     return {
+      tableAuth: {
+        columns: [{ code: 'company_name', name: '门店名称11111' }],
+        buttons: []
+      },
       tableParams: {
         menu_id: '84112ae0cac0a44cb08e74ee8200eed6',
         pageSize: -2

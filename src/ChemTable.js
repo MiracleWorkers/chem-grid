@@ -5,6 +5,7 @@ import 'chem-table-enterprise';
 import mixinSource from './mixins/TableSource';
 import mixinIframeComponents from './mixins/TableSlotComponents';
 import { defaultTableConfig, defaultTableItemConfig } from './DefaultConfig';
+import { isObject, isArray } from './utils';
 
 export default {
   name: 'chem-grid',
@@ -27,7 +28,9 @@ export default {
     },
     auth: {
       required: false,
-      default: () => ({ columns: [], buttons: [] })
+      validator: value => {
+        return isObject(value) && isArray(value.columns) && isArray(value.buttons);
+      }
     }
   },
   data() {
@@ -62,9 +65,24 @@ export default {
   },
 
   computed: {
+    // 权限校验
+    realColumnsAndButtons() {
+      const { items = [], buttons = [] } = this.config;
+      if (!this.auth) return { items, buttons };
+      const authColumns = this.auth ? this.auth.columns : [];
+      const authButtons = this.auth ? this.auth.buttons : [];
+
+      const _filterItems = [];
+      items.forEach(item => {
+        const target = authColumns.find(t => t.code === item.column);
+        if (target) _filterItems.push({ ...item, label: target.name });
+      });
+      const _filterButtons = buttons.filter(btn => authButtons.indexOf(btn) > -1);
+      return { items: _filterItems, buttons: _filterButtons };
+    },
     localGridOption() {
       if (this.validateConfig(this.config) === false) return {};
-      const { infiniteScroll, sortable, items, showIndex, multiple, sortConfig, url } = {
+      const { infiniteScroll, sortable, showIndex, multiple, sortConfig, url } = {
         ...defaultTableConfig,
         ...this.config
       };
@@ -94,7 +112,7 @@ export default {
           resizable: true
         });
       }
-      items.forEach(item => {
+      this.realColumnsAndButtons.items.forEach(item => {
         const _column = {
           headerName: item.label,
           field: item.column,
