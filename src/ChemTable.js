@@ -7,7 +7,7 @@ import mixinIframeComponents from './mixins/TableSlotComponents';
 import { defaultTableConfig, defaultTableItemConfig } from './DefaultConfig';
 
 export default {
-  name: 'chem-table',
+  name: 'chem-grid',
   inheritAttrs: false,
   components: { AgGridVue },
   mixins: [mixinSource, mixinIframeComponents],
@@ -171,8 +171,8 @@ export default {
         this.$emit('row-select', e.data);
       }
     },
-    refresh(isResetSelected = false) {
-      this.$_fetchSourceData(isResetSelected);
+    refresh(isReset = false) {
+      this.$_fetchSourceData(isReset);
     },
     setData(sourceData = []) {
       this.gridApi.setRowData(sourceData);

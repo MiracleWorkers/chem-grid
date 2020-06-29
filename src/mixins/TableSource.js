@@ -1,11 +1,12 @@
 import { filterObjectNull, isFunction } from '../utils';
 export default {
   methods: {
-    async $_fetchSourceData(isResetSelected = false) {
+    async $_fetchSourceData(isReset = false) {
       const { url, pipe } = this.config;
       if (!url) return; // fetch data not by url config
       this.showGridLoading();
       try {
+        this.pagination.currentPage = isReset ? 1 : this.pagination.currentPage; // 重置分页
         let fetchResponse = await this.$GRID_HTTP_INSTANCE(this.config.url, {
           params: filterObjectNull({
             ...this.localParams,
@@ -28,7 +29,7 @@ export default {
           this.gridApi.setPinnedBottomRowData([{ _rowNum: '合计', ...customTotal }]);
         }
         // 3. 重新勾选之前选中
-        isResetSelected ? (this.localSelected = []) : this.$_checkSelectedRow();
+        isReset ? (this.localSelected = []) : this.$_checkSelectedRow();
         // 4. 分页信息设置
         this.pagination.total = totalItem;
       } finally {
