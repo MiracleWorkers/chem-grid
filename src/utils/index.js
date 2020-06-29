@@ -14,4 +14,23 @@ const filterObjectNull = obj => {
   }
   return _filterAfter;
 };
-export { isArray, isFunction, isObject, filterObjectNull };
+const debounce = (func, wait = 500, immediate = false) => {
+  let timeout;
+  return function() {
+    const context = this;
+    const args = arguments;
+    if (timeout) clearTimeout(timeout);
+    if (immediate) {
+      const callNow = !timeout;
+      timeout = setTimeout(function() {
+        timeout = null;
+      }, wait);
+      if (callNow) func.apply(context, args);
+    } else {
+      timeout = setTimeout(function() {
+        func.apply(context, args);
+      }, wait);
+    }
+  };
+};
+export { isArray, isFunction, isObject, filterObjectNull, debounce };

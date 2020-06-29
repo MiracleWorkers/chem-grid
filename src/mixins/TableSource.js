@@ -1,7 +1,7 @@
 import { filterObjectNull, isFunction } from '../utils';
 export default {
   methods: {
-    async $_fetchSourceData() {
+    async $_fetchSourceData(isResetSelected = false) {
       const { url, pipe } = this.config;
       if (!url) return; // fetch data not by url config
       this.showGridLoading();
@@ -28,7 +28,7 @@ export default {
           this.gridApi.setPinnedBottomRowData([{ _rowNum: '合计', ...customTotal }]);
         }
         // 3. 重新勾选之前选中
-        this.$_checkSelectedRow();
+        isResetSelected ? (this.localSelected = []) : this.$_checkSelectedRow();
         // 4. 分页信息设置
         this.pagination.total = totalItem;
       } finally {

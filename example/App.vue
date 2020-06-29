@@ -1,7 +1,13 @@
 <template>
   <div>
     <login />
-    <chem-table ref="table" style="width:900px;height: 400px" :config="tableConfig" :params="tableParams"></chem-table>
+    <chem-table
+      ref="table"
+      style="width:900px;height: 400px"
+      :config="tableConfig"
+      :params="tableParams"
+      @row-select="handleRowSelect"
+    ></chem-table>
     <chem-table ref="table" style="width:800px;height: 400px" :config="tableConfig2" :params="tableParams2">
       <template #commodity_num="{model, $index}">
         <span>{{ model.commodity_num }} - {{ $index }} - 嘿嘿</span>
@@ -96,6 +102,9 @@ export default {
     };
   },
   methods: {
+    handleRowSelect(data) {
+      console.log(data);
+    },
     sleep(ms) {
       return new Promise(resolve => setTimeout(resolve, ms));
     },

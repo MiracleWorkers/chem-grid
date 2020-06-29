@@ -125,7 +125,8 @@ export default {
         localeText: Object.freeze(localeText),
         rowSelection: 'multiple',
         suppressRowClickSelection: true,
-        suppressMultiSort: true,
+        rowDeselection: true, // 通过space取消选择
+        suppressMultiSort: true, // 不允许多排序
         enableRangeSelection: true,
         sortingOrder: sortConfig,
         frameworkComponents: this.$_registerSlotComponents(),
@@ -155,15 +156,26 @@ export default {
       this.gridApi.hideOverlay();
     },
     // ag-grid可以进行多column排序，但日常业务中不多见，此处仅处理单sort的情况
-    listenSortChange() {
+    onSortChanged() {
       const _currentSortStatus = this.gridApi.getSortModel()[0];
       this.localParams[this.$GRID_SORT_PROPERTY] = _currentSortStatus
         ? `${_currentSortStatus.colId} ${_currentSortStatus.sort}`
         : '';
       this.$_fetchSourceData();
     },
-    listenRowDbClicked(params) {
-      console.log(params);
+    onRowDoubleClicked(params) {
+      this.$emit('row-select', params.data);
+    },
+    onCellKeyDown(e) {
+      if (e.event.key === 'Enter') {
+        this.$emit('row-select', e.data);
+      }
+    },
+    refresh(isResetSelected = false) {
+      this.$_fetchSourceData(isResetSelected);
+    },
+    setData(sourceData = []) {
+      this.gridApi.setRowData(sourceData);
     }
   },
   render(h) {
@@ -175,9 +187,10 @@ export default {
           gridOptions: this.localGridOption
         },
         on: {
-          sortChanged: this.listenSortChange,
+          sortChanged: this.onSortChanged,
           selectionChanged: this.$_syncSelectedData,
-          rowDoubleClicked: this.listenRowDbClicked,
+          rowDoubleClicked: this.onRowDoubleClicked,
+          cellKeyDown: this.onCellKeyDown,
           ...this.$listeners
         }
       },
