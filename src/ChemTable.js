@@ -142,9 +142,25 @@ export default {
         ...this.config
       };
 
-      const statusBarConfig = {
+      const _statusBarConfig = {
         statusPanels: [{ statusPanel: 'renderPaginationTotal', align: 'left' }, { statusPanel: 'renderPagination' }]
       };
+
+      const _customizePanel = {
+        toolPanels: [
+          {
+            id: 'customizeColumns',
+            labelDefault: '自定义',
+            iconKey: 'aggregation',
+            toolPanel: 'renderCustomizePanel'
+          }
+        ]
+      };
+
+      const _customizeIcon = {
+        aggregation: '<span class="ag-icon ag-icon-aggregation"></span>'
+      };
+
       return {
         rowModelType: infiniteScroll ? 'infinite' : 'clientSide',
         localeText: Object.freeze(localeText),
@@ -155,7 +171,9 @@ export default {
         enableRangeSelection: true,
         sortingOrder: sortConfig,
         frameworkComponents: this.$_registerSlotComponents(),
-        statusBar: statusBarConfig,
+        statusBar: _statusBarConfig, // 底部状态栏
+        sideBar: _customizePanel, // 自定义侧边栏
+        icons: _customizeIcon, // 自定义图标
         ...this.$attrs
       };
     }

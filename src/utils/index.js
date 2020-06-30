@@ -33,4 +33,14 @@ const debounce = (func, wait = 500, immediate = false) => {
     }
   };
 };
-export { isArray, isFunction, isObject, filterObjectNull, debounce };
+const deepClone = obj => {
+  if (typeof obj !== 'object' || obj === null) return obj;
+  const _clone = obj instanceof Array ? [] : {};
+  for (let key in obj) {
+    if (Object.prototype.hasOwnProperty.call(obj, key)) {
+      _clone[key] = deepClone(obj[key]);
+    }
+  }
+  return _clone;
+};
+export { isArray, isFunction, isObject, filterObjectNull, debounce, deepClone };
