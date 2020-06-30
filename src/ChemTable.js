@@ -80,9 +80,9 @@ export default {
       const _filterButtons = buttons.filter(btn => authButtons.indexOf(btn) > -1);
       return { items: _filterItems, buttons: _filterButtons };
     },
-    localGridOption() {
-      if (this.validateConfig(this.config) === false) return {};
-      const { infiniteScroll, sortable, showIndex, multiple, sortConfig, url } = {
+    // * 从localGridOption提取出来，后续外部修改了配置，放在里面不会触发重绘
+    columnList() {
+      const { sortable, showIndex, multiple, url } = {
         ...defaultTableConfig,
         ...this.config
       };
@@ -133,12 +133,19 @@ export default {
         _columnDefs.push(_column);
       });
 
+      return _columnDefs;
+    },
+    localGridOption() {
+      if (this.validateConfig(this.config) === false) return {};
+      const { infiniteScroll, sortConfig } = {
+        ...defaultTableConfig,
+        ...this.config
+      };
+
       const statusBarConfig = {
         statusPanels: [{ statusPanel: 'renderPaginationTotal', align: 'left' }, { statusPanel: 'renderPagination' }]
       };
-
       return {
-        columnDefs: _columnDefs,
         rowModelType: infiniteScroll ? 'infinite' : 'clientSide',
         localeText: Object.freeze(localeText),
         rowSelection: 'multiple',
@@ -202,7 +209,8 @@ export default {
       {
         class: 'ag-theme-balham',
         attrs: {
-          gridOptions: this.localGridOption
+          gridOptions: this.localGridOption,
+          columnDefs: this.columnList
         },
         on: {
           sortChanged: this.onSortChanged,
