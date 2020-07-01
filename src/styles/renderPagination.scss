@@ -1,8 +1,7 @@
+@import './var.scss';
 // -------- 分页器 --------
-
 $PAGINATION_HEIGHT: 40px;
 $PAGINATION_BUTTON_SIZE: 22px;
-$PAGINATION_BUTTON_COLOR: #1890ff;
 
 .render_pagination-total {
   line-height: $PAGINATION_HEIGHT;
@@ -28,14 +27,14 @@ $PAGINATION_BUTTON_COLOR: #1890ff;
     &[data-index] {
       cursor: pointer;
       &:hover {
-        color: $PAGINATION_BUTTON_COLOR;
+        color: $THEME_COLOR;
       }
     }
   }
 
   .pagination-item_active {
-    color: $PAGINATION_BUTTON_COLOR;
-    border-color: $PAGINATION_BUTTON_COLOR;
+    color: $THEME_COLOR;
+    border-color: $THEME_COLOR;
     font-weight: bold;
   }
 
@@ -66,9 +65,9 @@ $PAGINATION_BUTTON_COLOR: #1890ff;
       border-radius: 2px;
       text-align: center;
       margin: 0 2px;
-      caret-color: $PAGINATION_BUTTON_COLOR;
+      caret-color: $THEME_COLOR;
       &:focus {
-        border-color: $PAGINATION_BUTTON_COLOR;
+        border-color: $THEME_COLOR;
       }
     }
     // 去除number input的上下箭头

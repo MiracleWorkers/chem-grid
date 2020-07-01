@@ -1,41 +1,65 @@
 // 自定义拖拽排序样式
 .customize_drag_content {
-  padding: 0 10px;
   width: 100%;
+  height: 100%;
 
-  b {
-    font-size: 13px;
-    font-weight: 500;
-  }
+  .customize_drag__content-list {
+    box-sizing: border-box;
+    height: calc(100% - 32px);
+    padding-bottom: 40px;
+    overflow-y: auto;
 
-  ul {
-    position: relative;
-    list-style: none;
-    padding: 10px 0 20px;
-    background-color: red;
+    ul {
+      position: relative;
+      list-style: none;
+      padding: 10px 0;
+      // background-color: red;
 
-    li {
-      transition: all ease 350ms;
-      input,
-      span {
-        display: inline-block;
-        vertical-align: middle;
+      li {
+        transition: all ease 350ms;
+        padding: 0 10px;
+        .drag_title {
+          display: inline-block;
+          vertical-align: middle;
+        }
+        .ag-icon {
+          @extend .drag_title;
+          cursor: grab;
+          padding: 0 4px;
+        }
       }
-      .ag-icon {
+
+      .customize_drag_content-mask {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        z-index: 99;
         cursor: grab;
-        padding: 0 4px;
+        background-color: rgba(0, 0, 0, 0);
       }
     }
   }
-
-  .customize_drag_content-mask {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    z-index: 99;
-    cursor: grab;
-    background-color: rgba(0, 0, 0, 0.4);
+  // 按钮组
+  .customize_drag_content-buttons {
+    box-sizing: border-box;
+    height: 32px;
+    line-height: 32px;
+    text-align: right;
+    border-top: 1px solid #dcdee3;
+    button {
+      margin-right: 16px;
+      cursor: pointer;
+      font-size: 12px;
+      outline: none;
+      border: 1px solid #c4c6cf;
+      border-radius: 2px;
+      background-color: transparent;
+      transition: all 150ms;
+      &:active {
+        background-color: #c4c6cf;
+      }
+    }
   }
 }

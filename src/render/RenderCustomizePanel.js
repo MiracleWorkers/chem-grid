@@ -2,7 +2,9 @@ import Vue from 'vue';
 import '../styles/renderCustomizePanel.scss';
 import { deepClone } from '../utils';
 
-const HEIGHT = 20;
+import BaseCheckbox from '../component/BaseCheckbox.vue';
+
+const HEIGHT = 22;
 
 const move = (arr, startIndex, toIndex) => {
   const _arr = deepClone(arr);
@@ -12,8 +14,10 @@ const move = (arr, startIndex, toIndex) => {
 
 const panel = {
   inject: ['Provider'],
+  components: { BaseCheckbox },
   data() {
     return {
+      flag: true,
       columnList: this.Provider.columnList,
       state: {
         dragging: false,
@@ -61,7 +65,8 @@ const panel = {
         activeStyle = {
           backgroundColor: '#eee',
           transform: `translate(5px, ${this.state.offsetPageY}px)`,
-          opacity: 0.7
+          opacity: 0.6,
+          fontWeight: 600
         };
       }
 
@@ -69,28 +74,33 @@ const panel = {
     }
   },
   render() {
+    // Sticky Footer
     return (
       <div class="customize_drag_content">
-        <b>自定义column排序功能</b>
-        <ul onMousedown={this.handleMouseDown}>
-          {this.columnList.map((column, idx) => {
-            return (
-              <li key={column.field} style={this.getDraggingStyle(idx)}>
-                <input type="checkbox"></input>
-                <span class="ag-icon ag-icon-grip" data-index={idx}></span>
-                <span>{column.headerName}</span>
-              </li>
-            );
-          })}
-          {this.state.dragging && (
-            <div
-              class="customize_drag_content-mask"
-              onMouseup={this.handleMouseUp}
-              onMousemove={this.handleMouseMove}
-              onMouseleave={this.handleMouseUp}
-            ></div>
-          )}
-        </ul>
+        <div class="customize_drag__content-list">
+          <ul onMousedown={this.handleMouseDown}>
+            {this.columnList.map((column, idx) => {
+              return (
+                <li key={column.field} style={this.getDraggingStyle(idx)}>
+                  <base-checkbox vModel={this.flag}></base-checkbox>
+                  <span class="ag-icon ag-icon-grip" data-index={idx}></span>
+                  <span class="drag_title">{column.headerName}</span>
+                </li>
+              );
+            })}
+            {this.state.dragging && (
+              <div
+                class="customize_drag_content-mask"
+                onMouseup={this.handleMouseUp}
+                onMousemove={this.handleMouseMove}
+                onMouseleave={this.handleMouseUp}
+              ></div>
+            )}
+          </ul>
+        </div>
+        <div class="customize_drag_content-buttons">
+          <button>重置</button>
+        </div>
       </div>
     );
   }
