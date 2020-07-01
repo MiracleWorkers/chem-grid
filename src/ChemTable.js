@@ -5,7 +5,7 @@ import 'chem-table-enterprise';
 import mixinSource from './mixins/TableSource';
 import mixinIframeComponents from './mixins/TableSlotComponents';
 import { defaultTableConfig, defaultTableItemConfig } from './DefaultConfig';
-import { isObject, isArray } from './utils';
+import { isObject, isArray, swapArrElement } from './utils';
 
 export default {
   name: 'chem-grid',
@@ -38,7 +38,9 @@ export default {
       gridApi: null,
       columnApi: null,
       localParams: this.params,
+      localColumns: [],
       localSelected: [],
+      dragging: true,
       rowKey: this.config.rowKey || defaultTableConfig.rowKey,
       pagination: {
         pageCount: this.config.pageCount || defaultTableConfig.pageCount,
@@ -56,6 +58,9 @@ export default {
       },
       deep: true
     }
+  },
+  created() {
+    this.localColumns = this.generateColumnConfig();
   },
   mounted() {
     this.gridApi = this.localGridOption.api;
@@ -80,8 +85,52 @@ export default {
       const _filterButtons = buttons.filter(btn => authButtons.indexOf(btn) > -1);
       return { items: _filterItems, buttons: _filterButtons };
     },
-    // * 从localGridOption提取出来，后续外部修改了配置，放在里面不会触发重绘
-    columnList() {
+    localGridOption() {
+      if (this.validateConfig(this.config) === false) return {};
+      const { infiniteScroll, sortConfig } = {
+        ...defaultTableConfig,
+        ...this.config
+      };
+
+      const _statusBarConfig = {
+        statusPanels: [{ statusPanel: 'renderPaginationTotal', align: 'left' }, { statusPanel: 'renderPagination' }]
+      };
+
+      const _customizePanel = {
+        toolPanels: [
+          {
+            id: 'customizeColumns',
+            labelDefault: '自定义',
+            iconKey: 'aggregation',
+            toolPanel: 'renderCustomizePanel'
+          }
+        ]
+      };
+
+      const _customizeIcon = {
+        aggregation: '<span class="ag-icon ag-icon-aggregation"></span>'
+      };
+
+      return {
+        rowModelType: infiniteScroll ? 'infinite' : 'clientSide',
+        localeText: Object.freeze(localeText),
+        rowSelection: 'multiple',
+        suppressRowClickSelection: true,
+        suppressDragLeaveHidesColumns: true, // 禁止列拖动隐藏
+        rowDeselection: true, // 通过space取消选择
+        suppressMultiSort: true, // 不允许多排序
+        enableRangeSelection: true,
+        sortingOrder: sortConfig,
+        frameworkComponents: this.$_registerSlotComponents(),
+        statusBar: _statusBarConfig, // 底部状态栏
+        sideBar: _customizePanel, // 自定义侧边栏
+        icons: _customizeIcon, // 自定义图标
+        ...this.$attrs
+      };
+    }
+  },
+  methods: {
+    generateColumnConfig() {
       const { sortable, showIndex, multiple, url } = {
         ...defaultTableConfig,
         ...this.config
@@ -91,6 +140,7 @@ export default {
         _columnDefs.push({
           pinned: 'left',
           width: 40,
+          hide: false,
           checkboxSelection: true,
           suppressMenu: true,
           headerCheckboxSelection: true
@@ -101,6 +151,7 @@ export default {
           headerName: '#',
           field: '_rowNum',
           pinned: 'left',
+          hide: false,
           width: 50,
           suppressMenu: true,
           valueGetter: params => {
@@ -135,50 +186,6 @@ export default {
 
       return _columnDefs;
     },
-    localGridOption() {
-      if (this.validateConfig(this.config) === false) return {};
-      const { infiniteScroll, sortConfig } = {
-        ...defaultTableConfig,
-        ...this.config
-      };
-
-      const _statusBarConfig = {
-        statusPanels: [{ statusPanel: 'renderPaginationTotal', align: 'left' }, { statusPanel: 'renderPagination' }]
-      };
-
-      const _customizePanel = {
-        toolPanels: [
-          {
-            id: 'customizeColumns',
-            labelDefault: '自定义',
-            iconKey: 'aggregation',
-            toolPanel: 'renderCustomizePanel'
-          }
-        ]
-      };
-
-      const _customizeIcon = {
-        aggregation: '<span class="ag-icon ag-icon-aggregation"></span>'
-      };
-
-      return {
-        rowModelType: infiniteScroll ? 'infinite' : 'clientSide',
-        localeText: Object.freeze(localeText),
-        rowSelection: 'multiple',
-        suppressRowClickSelection: true,
-        rowDeselection: true, // 通过space取消选择
-        suppressMultiSort: true, // 不允许多排序
-        enableRangeSelection: true,
-        sortingOrder: sortConfig,
-        frameworkComponents: this.$_registerSlotComponents(),
-        statusBar: _statusBarConfig, // 底部状态栏
-        sideBar: _customizePanel, // 自定义侧边栏
-        icons: _customizeIcon, // 自定义图标
-        ...this.$attrs
-      };
-    }
-  },
-  methods: {
     validateConfig(config) {
       const { items } = config;
       if (!Array.isArray(items)) {
@@ -214,6 +221,22 @@ export default {
         this.$emit('row-select', e.data);
       }
     },
+    onColumnMoved(params) {
+      if (this.dragging) return;
+      const {
+        column: { colId },
+        toIndex
+      } = params;
+      const draggingIndex = this.localColumns.find(t => t.filed === colId);
+      this.localColumns = swapArrElement(this.localColumns, draggingIndex, toIndex);
+    },
+    onDragStopped() {},
+    onColumnPinned(params) {
+      console.log(params);
+    },
+    onColumnResized(params) {
+      console.log(params);
+    },
     refresh(isReset = false) {
       this.$_fetchSourceData(isReset);
     },
@@ -228,14 +251,18 @@ export default {
         class: 'ag-theme-balham',
         attrs: {
           gridOptions: this.localGridOption,
-          columnDefs: this.columnList
+          columnDefs: this.localColumns
         },
         on: {
+          ...this.$listeners,
           sortChanged: this.onSortChanged,
           selectionChanged: this.$_syncSelectedData,
           rowDoubleClicked: this.onRowDoubleClicked,
           cellKeyDown: this.onCellKeyDown,
-          ...this.$listeners
+          columnMoved: this.onColumnMoved,
+          dragStopped: this.onDragStopped,
+          columnPinned: this.onColumnPinned,
+          columnResized: this.onColumnResized
         }
       },
       AgGridVue

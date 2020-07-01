@@ -1,24 +1,17 @@
 import Vue from 'vue';
 import '../styles/renderCustomizePanel.scss';
-import { deepClone } from '../utils';
+import { deepClone, swapArrElement as move } from '../utils';
 
 import BaseCheckbox from '../component/BaseCheckbox.vue';
 
 const HEIGHT = 22;
-
-const move = (arr, startIndex, toIndex) => {
-  const _arr = deepClone(arr);
-  _arr.splice(toIndex, 0, _arr.splice(startIndex, 1)[0]);
-  return _arr;
-};
 
 const panel = {
   inject: ['Provider'],
   components: { BaseCheckbox },
   data() {
     return {
-      flag: true,
-      columnList: this.Provider.columnList,
+      columnList: deepClone(this.Provider.localColumns),
       state: {
         dragging: false,
         draggingIndex: -1,
@@ -26,6 +19,26 @@ const panel = {
         offsetPageY: 0
       }
     };
+  },
+  computed: {
+    parentColumnListConfig() {
+      return this.Provider.localColumns;
+    }
+  },
+  watch: {
+    'Provider.localColumns': {
+      handler: function(newArr) {
+        if (JSON.stringify(newArr) === JSON.stringify(this.columnList)) return;
+        this.columnList = deepClone(newArr);
+      },
+      deep: true
+    },
+    columnList: {
+      handler: function(newList) {
+        this.Provider.localColumns = deepClone(newList);
+      },
+      deep: true
+    }
   },
   methods: {
     handleMouseDown(evt) {
@@ -69,12 +82,16 @@ const panel = {
           fontWeight: 600
         };
       }
-
       return { ...activeStyle, height: HEIGHT + 'px' };
+    },
+    handleClose() {
+      this.params.api.closeToolPanel();
+    },
+    checkboxStateChange(field, isHide) {
+      this.params.columnApi.setColumnVisible(field, !isHide);
     }
   },
   render() {
-    // Sticky Footer
     return (
       <div class="customize_drag_content">
         <div class="customize_drag__content-list">
@@ -82,7 +99,10 @@ const panel = {
             {this.columnList.map((column, idx) => {
               return (
                 <li key={column.field} style={this.getDraggingStyle(idx)}>
-                  <base-checkbox vModel={this.flag}></base-checkbox>
+                  <base-checkbox
+                    vModel={column.hide}
+                    onChange={this.checkboxStateChange.bind(null, column.field)}
+                  ></base-checkbox>
                   <span class="ag-icon ag-icon-grip" data-index={idx}></span>
                   <span class="drag_title">{column.headerName}</span>
                 </li>
@@ -99,7 +119,8 @@ const panel = {
           </ul>
         </div>
         <div class="customize_drag_content-buttons">
-          <button>重置</button>
+          <button>恢复默认</button>
+          <button onClick={this.handleClose}>关闭</button>
         </div>
       </div>
     );

@@ -33,6 +33,7 @@ const debounce = (func, wait = 500, immediate = false) => {
     }
   };
 };
+
 const deepClone = obj => {
   if (typeof obj !== 'object' || obj === null) return obj;
   const _clone = obj instanceof Array ? [] : {};
@@ -43,4 +44,11 @@ const deepClone = obj => {
   }
   return _clone;
 };
-export { isArray, isFunction, isObject, filterObjectNull, debounce, deepClone };
+
+// 切换数组两个元素的位置
+const swapArrElement = (arr, startIndex, toIndex) => {
+  const _arr = deepClone(arr);
+  _arr.splice(toIndex, 0, _arr.splice(startIndex, 1)[0]);
+  return _arr;
+};
+export { isArray, isFunction, isObject, filterObjectNull, debounce, deepClone, swapArrElement };

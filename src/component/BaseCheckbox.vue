@@ -1,25 +1,28 @@
 <template>
   <label class="chem_base-checkbox">
-    <input type="checkbox" :checked="checked" @change="this.handleChange" />
+    <input type="checkbox" :checked="hide === false" @change="this.handleChange" />
     <div class="chem_base-checkout_inner"></div>
   </label>
 </template>
 
 <script>
+// -------------------------------
+// 该checkbox用于控制是否隐藏，所以逻辑和普通checkbox相反，正是反，反是正
+// -------------------------------
 export default {
   model: {
-    prop: 'checked',
+    prop: 'hide',
     event: 'change'
   },
   props: {
-    checked: {
+    hide: {
       type: Boolean,
-      default: false
+      default: true
     }
   },
   methods: {
     handleChange(evt) {
-      this.$emit('change', evt.target.checked);
+      this.$emit('change', evt.target.checked === false ? true : false);
     }
   }
 };
