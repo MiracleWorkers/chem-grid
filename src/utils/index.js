@@ -51,4 +51,29 @@ const swapArrElement = (arr, startIndex, toIndex) => {
   _arr.splice(toIndex, 0, _arr.splice(startIndex, 1)[0]);
   return _arr;
 };
-export { isArray, isFunction, isObject, filterObjectNull, debounce, deepClone, swapArrElement };
+
+const setLocalStorage = (field, value) => {
+  window.localStorage.setItem(field.toUpperCase(), JSON.stringify(value));
+};
+
+const getLocalStorage = field => {
+  const result = window.localStorage.getItem(field.toUpperCase());
+  return JSON.parse(result);
+};
+
+const removeLocalStorage = field => {
+  window.localStorage.removeItem(field.toUpperCase());
+};
+
+export {
+  isArray,
+  isFunction,
+  isObject,
+  filterObjectNull,
+  debounce,
+  deepClone,
+  swapArrElement,
+  setLocalStorage,
+  getLocalStorage,
+  removeLocalStorage
+};

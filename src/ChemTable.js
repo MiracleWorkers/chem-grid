@@ -5,7 +5,7 @@ import 'chem-table-enterprise';
 import mixinSource from './mixins/TableSource';
 import mixinIframeComponents from './mixins/TableSlotComponents';
 import { defaultTableConfig, defaultTableItemConfig } from './DefaultConfig';
-import { isObject, isArray, swapArrElement } from './utils';
+import { isObject, isArray, swapArrElement, setLocalStorage, getLocalStorage, deepClone } from './utils';
 
 export default {
   name: 'chem-grid',
@@ -37,10 +37,12 @@ export default {
     return {
       gridApi: null,
       columnApi: null,
+
       localParams: this.params,
-      localColumns: [],
       localSelected: [],
-      dragging: true,
+      localColumns: [],
+      panelColumns: [],
+
       rowKey: this.config.rowKey || defaultTableConfig.rowKey,
       pagination: {
         pageCount: this.config.pageCount || defaultTableConfig.pageCount,
@@ -61,6 +63,7 @@ export default {
   },
   created() {
     this.localColumns = this.generateColumnConfig();
+    this.panelColumns = this.generateColumnConfig();
   },
   mounted() {
     this.gridApi = this.localGridOption.api;
@@ -138,6 +141,7 @@ export default {
       const _columnDefs = [];
       if (multiple || defaultTableConfig.multiple) {
         _columnDefs.push({
+          colId: '_checkbox',
           pinned: 'left',
           width: 40,
           hide: false,
@@ -149,7 +153,7 @@ export default {
       if (showIndex || defaultTableConfig.showIndex) {
         _columnDefs.push({
           headerName: '#',
-          field: '_rowNum',
+          colId: '_rowNum',
           pinned: 'left',
           hide: false,
           width: 50,
@@ -167,6 +171,7 @@ export default {
         const _column = {
           headerName: item.label,
           field: item.column,
+          colId: item.column,
           sortable: item.sortable || sortable,
           pinned: item.pin || defaultTableItemConfig.pin,
           hide: item.hide || defaultTableItemConfig.hide,
@@ -184,15 +189,37 @@ export default {
         _columnDefs.push(_column);
       });
 
-      return _columnDefs;
+      return this.smartRemakeColumnsSet(_columnDefs);
+    },
+    smartRemakeColumnsSet(columnConfig) {
+      const _passInConfig = deepClone(columnConfig);
+      const _storageConfig = getLocalStorage(this.$GRID_SALT + '_' + this.config.id) || [];
+      const _processed = [];
+      _storageConfig.forEach(column => {
+        const _target = _passInConfig.find(c => c.colId === column.colId || c.headerName === column.headerName);
+        if (_target) {
+          _processed.push({
+            ..._target,
+            pinned: column.pinned,
+            hide: column.hide,
+            width: column.width
+          });
+          _target._isDeal = true;
+        }
+      });
+      const noDealList = _passInConfig.filter(c => !c._isDeal);
+      return [..._processed, ...noDealList];
     },
     validateConfig(config) {
-      const { items } = config;
-      if (!Array.isArray(items)) {
-        console.error('items配置项需为Array,请检查配置');
+      const { items, id } = config;
+      if (!id) {
+        console.error('[chem-grid]:id字段为必填项,请配置并确认其唯一性，该字段用于localStorage中自定义配置的存储');
+        return false;
+      } else if (!Array.isArray(items)) {
+        console.error('[chem-grid]:items配置项需为Array,请检查配置');
         return false;
       } else if (!items.every(item => item.column)) {
-        console.error('items中每个列都需配置column字段,请检查配置');
+        console.error('[chem-grid]:items中每个列都需配置column字段,请检查配置');
         return false;
       }
       return true;
@@ -221,21 +248,24 @@ export default {
         this.$emit('row-select', e.data);
       }
     },
-    onColumnMoved(params) {
-      if (this.dragging) return;
-      const {
-        column: { colId },
-        toIndex
-      } = params;
-      const draggingIndex = this.localColumns.find(t => t.filed === colId);
-      this.localColumns = swapArrElement(this.localColumns, draggingIndex, toIndex);
+    handleSyncStorageSet() {
+      setLocalStorage(this.$GRID_SALT + '_' + this.config.id, this.panelColumns);
     },
-    onDragStopped() {},
-    onColumnPinned(params) {
-      console.log(params);
+    onColumnMoved({ column: { colId }, toIndex }) {
+      const _movingColumnIndex = this.panelColumns.findIndex(c => c.field === colId);
+      this.panelColumns = swapArrElement(this.panelColumns, _movingColumnIndex, toIndex);
+      this.handleSyncStorageSet();
     },
-    onColumnResized(params) {
-      console.log(params);
+    onColumnPinned({ column: { colId }, pinned }) {
+      const _pinnedColumnIndex = this.panelColumns.findIndex(c => c.field === colId);
+      this.panelColumns[_pinnedColumnIndex].pinned = pinned;
+      this.handleSyncStorageSet();
+    },
+    onColumnResized({ column: { actualWidth, colId }, finished }) {
+      if (finished === false) return;
+      const _resizeColumnIndex = this.panelColumns.findIndex(c => c.field === colId || c.colId === colId);
+      this.panelColumns[_resizeColumnIndex].width = actualWidth;
+      this.handleSyncStorageSet();
     },
     refresh(isReset = false) {
       this.$_fetchSourceData(isReset);
@@ -260,7 +290,6 @@ export default {
           rowDoubleClicked: this.onRowDoubleClicked,
           cellKeyDown: this.onCellKeyDown,
           columnMoved: this.onColumnMoved,
-          dragStopped: this.onDragStopped,
           columnPinned: this.onColumnPinned,
           columnResized: this.onColumnResized
         }

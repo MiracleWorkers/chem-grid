@@ -1,4 +1,5 @@
 interface ITableConfig {
+  id: string;
   rowKey?: string;
   hasPage?: boolean;
   isLoopSelect?: boolean;

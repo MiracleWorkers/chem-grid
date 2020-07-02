@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import '../styles/renderCustomizePanel.scss';
-import { deepClone, swapArrElement as move } from '../utils';
+import { deepClone, removeLocalStorage } from '../utils';
 
 import BaseCheckbox from '../component/BaseCheckbox.vue';
 
@@ -11,7 +11,7 @@ const panel = {
   components: { BaseCheckbox },
   data() {
     return {
-      columnList: deepClone(this.Provider.localColumns),
+      columnList: deepClone(this.Provider.panelColumns),
       state: {
         dragging: false,
         draggingIndex: -1,
@@ -22,11 +22,11 @@ const panel = {
   },
   computed: {
     parentColumnListConfig() {
-      return this.Provider.localColumns;
+      return this.Provider.panelColumns;
     }
   },
   watch: {
-    'Provider.localColumns': {
+    'Provider.panelColumns': {
       handler: function(newArr) {
         if (JSON.stringify(newArr) === JSON.stringify(this.columnList)) return;
         this.columnList = deepClone(newArr);
@@ -35,12 +35,18 @@ const panel = {
     },
     columnList: {
       handler: function(newList) {
-        this.Provider.localColumns = deepClone(newList);
+        this.Provider.panelColumns = deepClone(newList);
       },
       deep: true
     }
   },
   methods: {
+    move(arr, startIndex, toIndex) {
+      const _arr = deepClone(arr);
+      _arr.splice(toIndex, 0, _arr.splice(startIndex, 1)[0]);
+      this.params.columnApi.moveColumnByIndex(startIndex, toIndex);
+      return _arr;
+    },
     handleMouseDown(evt) {
       const {
         target: { dataset, tagName }
@@ -61,12 +67,12 @@ const panel = {
       const _draggingIndex = this.state.draggingIndex;
       if (_offset > HEIGHT && _draggingIndex < this.columnList.length - 1) {
         _offset -= HEIGHT;
-        this.columnList = move(this.columnList, _draggingIndex, _draggingIndex + 1);
+        this.columnList = this.move(this.columnList, _draggingIndex, _draggingIndex + 1);
         this.state.draggingIndex = _draggingIndex + 1;
         this.state.startPageY += HEIGHT;
       } else if (_offset < -HEIGHT && _draggingIndex > 0) {
         _offset += HEIGHT;
-        this.columnList = move(this.columnList, _draggingIndex, _draggingIndex - 1);
+        this.columnList = this.move(this.columnList, _draggingIndex, _draggingIndex - 1);
         this.state.draggingIndex = _draggingIndex - 1;
         this.state.startPageY -= HEIGHT;
       }
@@ -87,6 +93,15 @@ const panel = {
     handleClose() {
       this.params.api.closeToolPanel();
     },
+    handleReset() {
+      removeLocalStorage(this.$GRID_SALT + '_' + this.Provider.config.id);
+      const initialColumns = this.Provider.generateColumnConfig();
+      this.Provider.panelColumns = deepClone(initialColumns);
+      this.Provider.localColumns = deepClone(initialColumns);
+      this.$nextTick(() => {
+        this.params.columnApi.resetColumnState();
+      });
+    },
     checkboxStateChange(field, isHide) {
       this.params.columnApi.setColumnVisible(field, !isHide);
     }
@@ -101,7 +116,7 @@ const panel = {
                 <li key={column.field} style={this.getDraggingStyle(idx)}>
                   <base-checkbox
                     vModel={column.hide}
-                    onChange={this.checkboxStateChange.bind(null, column.field)}
+                    onChange={this.checkboxStateChange.bind(null, column.colId)}
                   ></base-checkbox>
                   <span class="ag-icon ag-icon-grip" data-index={idx}></span>
                   <span class="drag_title">{column.headerName}</span>
@@ -119,7 +134,7 @@ const panel = {
           </ul>
         </div>
         <div class="customize_drag_content-buttons">
-          <button>恢复默认</button>
+          <button onClick={this.handleReset}>恢复默认</button>
           <button onClick={this.handleClose}>关闭</button>
         </div>
       </div>

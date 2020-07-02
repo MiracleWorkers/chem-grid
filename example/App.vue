@@ -32,6 +32,7 @@ export default {
         pageSize: -2
       },
       tableConfig: {
+        id: 'purch_dev',
         multiple: false,
         // infiniteScroll: true,
         url: '/pri/other_storage/get_goodseat_commodity_detail',
@@ -77,6 +78,7 @@ export default {
         pageSize: 500
       },
       tableConfig2: {
+        id: 'purch_pro',
         multiple: true,
         url: '/pri/purchase_plan/get_purchase_plan_detail',
         items: [
