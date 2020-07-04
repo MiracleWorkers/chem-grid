@@ -99,7 +99,11 @@ const panel = {
       this.Provider.panelColumns = deepClone(initialColumns);
       this.Provider.localColumns = deepClone(initialColumns);
       this.$nextTick(() => {
+        // TODO: 此处gridApi.setColumnDefs无效，后续看版本升级会不会修复
         this.params.columnApi.resetColumnState();
+        initialColumns.forEach(item => {
+          this.params.columnApi.setColumnWidth(item.colId, item.width || 200, true);
+        });
       });
     },
     checkboxStateChange(field, isHide) {

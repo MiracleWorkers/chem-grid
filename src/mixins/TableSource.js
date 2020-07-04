@@ -23,7 +23,7 @@ export default {
           customTotal = {},
           page: { totalItem = 10 }
         } = fetchResponse;
-        this.gridApi.setRowData(customPageList);
+        this.gridData = Object.freeze(customPageList);
         // 2. 设置统计信息
         if (customTotal && Object.keys(customTotal).length) {
           this.gridApi.setPinnedBottomRowData([{ _rowNum: '合计', ...customTotal }]);

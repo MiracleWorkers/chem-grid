@@ -7,6 +7,10 @@ import mixinIframeComponents from './mixins/TableSlotComponents';
 import { defaultTableConfig, defaultTableItemConfig } from './DefaultConfig';
 import { isObject, isArray, swapArrElement, setLocalStorage, getLocalStorage, deepClone } from './utils';
 
+import RenderPagination from './render/RenderPagination';
+import RenderPaginationTotal from './render/RenderPaginationTotal';
+import RenderCustomizePanel from './render/RenderCustomizePanel';
+
 export default {
   name: 'chem-grid',
   inheritAttrs: false,
@@ -38,10 +42,19 @@ export default {
       gridApi: null,
       columnApi: null,
 
+      gridOptions: {},
+      gridData: [],
+
       localParams: this.params,
       localSelected: [],
       localColumns: [],
       panelColumns: [],
+
+      registerComponents: {
+        renderPagination: RenderPagination,
+        renderPaginationTotal: RenderPaginationTotal,
+        renderCustomizePanel: RenderCustomizePanel
+      },
 
       rowKey: this.config.rowKey || defaultTableConfig.rowKey,
       pagination: {
@@ -62,14 +75,19 @@ export default {
     }
   },
   created() {
-    this.localColumns = this.generateColumnConfig();
-    this.panelColumns = this.generateColumnConfig();
+    this.gridOptions = this.generateGridOptions();
   },
   mounted() {
-    this.gridApi = this.localGridOption.api;
-    this.columnApi = this.localGridOption.columnApi;
+    this.gridApi = this.gridOptions.api;
+    this.columnApi = this.gridOptions.columnApi;
+    this.registerComponents = { ...this.registerComponents, ...this.$_registerSlotComponents() };
+    this.localColumns = this.generateColumnConfig();
+    this.panelColumns = this.generateColumnConfig();
     if (this.isInitialData === false) return;
     this.$_fetchSourceData();
+    this.$nextTick(() => {
+      this.gridApi.resetRowHeights();
+    });
   },
 
   computed: {
@@ -87,8 +105,10 @@ export default {
       });
       const _filterButtons = buttons.filter(btn => authButtons.indexOf(btn) > -1);
       return { items: _filterItems, buttons: _filterButtons };
-    },
-    localGridOption() {
+    }
+  },
+  methods: {
+    generateGridOptions() {
       if (this.validateConfig(this.config) === false) return {};
       const { infiniteScroll, sortConfig } = {
         ...defaultTableConfig,
@@ -124,15 +144,13 @@ export default {
         suppressMultiSort: true, // 不允许多排序
         enableRangeSelection: true,
         sortingOrder: sortConfig,
-        frameworkComponents: this.$_registerSlotComponents(),
         statusBar: _statusBarConfig, // 底部状态栏
         sideBar: _customizePanel, // 自定义侧边栏
         icons: _customizeIcon, // 自定义图标
+        immutableColumns: true,
         ...this.$attrs
       };
-    }
-  },
-  methods: {
+    },
     generateColumnConfig() {
       const { sortable, showIndex, multiple, url } = {
         ...defaultTableConfig,
@@ -157,6 +175,7 @@ export default {
           pinned: 'left',
           hide: false,
           width: 50,
+          cellStyle: { display: 'flex', alignItems: 'center' },
           suppressMenu: true,
           valueGetter: params => {
             const value = params.data._rowNum;
@@ -175,7 +194,6 @@ export default {
           sortable: item.sortable || sortable,
           pinned: item.pin || defaultTableItemConfig.pin,
           hide: item.hide || defaultTableItemConfig.hide,
-          width: item.width || null,
           resizable: true,
           filter: true,
           menuTabs: ['generalMenuTab', 'filterMenuTab'],
@@ -184,7 +202,11 @@ export default {
             return value;
           }
         };
-        if (item.slot) _column['cellRenderer'] = item.slot;
+        if (item.width) _column['width'] = item.width;
+        if (item.slot) {
+          _column['cellRendererFramework'] = this.registerComponents[item.slot];
+          _column['autoHeight'] = true;
+        }
         if (url) _column['comparator'] = () => null; // disable sort default action
         _columnDefs.push(_column);
       });
@@ -251,18 +273,20 @@ export default {
     handleSyncStorageSet() {
       setLocalStorage(this.$GRID_SALT + '_' + this.config.id, this.panelColumns);
     },
-    onColumnMoved({ column: { colId }, toIndex }) {
-      const _movingColumnIndex = this.panelColumns.findIndex(c => c.field === colId);
+    onColumnMoved({ column, toIndex }) {
+      if (column === null) return; // api操作
+      const _movingColumnIndex = this.panelColumns.findIndex(c => c.field === column.colId);
       this.panelColumns = swapArrElement(this.panelColumns, _movingColumnIndex, toIndex);
       this.handleSyncStorageSet();
     },
-    onColumnPinned({ column: { colId }, pinned }) {
-      const _pinnedColumnIndex = this.panelColumns.findIndex(c => c.field === colId);
+    onColumnPinned({ column, pinned }) {
+      if (column === null) return; // api操作
+      const _pinnedColumnIndex = this.panelColumns.findIndex(c => c.field === column.colId);
       this.panelColumns[_pinnedColumnIndex].pinned = pinned;
       this.handleSyncStorageSet();
     },
-    onColumnResized({ column: { actualWidth, colId }, finished }) {
-      if (finished === false) return;
+    onColumnResized({ column: { actualWidth, colId }, finished, source }) {
+      if (finished === false || source === 'api') return;
       const _resizeColumnIndex = this.panelColumns.findIndex(c => c.field === colId || c.colId === colId);
       this.panelColumns[_resizeColumnIndex].width = actualWidth;
       this.handleSyncStorageSet();
@@ -272,6 +296,7 @@ export default {
     },
     setData(sourceData = []) {
       this.gridApi.setRowData(sourceData);
+      this.gridData = Object.freeze(sourceData);
     }
   },
   render(h) {
@@ -280,8 +305,10 @@ export default {
       {
         class: 'ag-theme-balham',
         attrs: {
-          gridOptions: this.localGridOption,
-          columnDefs: this.localColumns
+          gridOptions: this.gridOptions,
+          columnDefs: this.localColumns,
+          rowData: this.gridData,
+          frameworkComponents: this.registerComponents
         },
         on: {
           ...this.$listeners,

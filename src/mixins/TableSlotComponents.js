@@ -1,7 +1,4 @@
 import Vue from 'vue';
-import RenderPagination from '../render/RenderPagination';
-import RenderPaginationTotal from '../render/RenderPaginationTotal';
-import RenderCustomizePanel from '../render/RenderCustomizePanel';
 
 export default {
   methods: {
@@ -13,34 +10,17 @@ export default {
       const _scopedSlots = this.$scopedSlots;
       Object.keys(_scopedSlots).forEach(key => {
         _components[key] = Vue.extend({
-          data() {
-            return {
-              useSlot: false,
-              scopedModel: null,
-              scopedIndex: null
-            };
-          },
           render: function(h) {
-            return this.useSlot
-              ? _scopedSlots[key]({
-                  model: this.scopedModel,
-                  $index: this.scopedIndex
-                })
-              : h('span', this.params.value);
-          },
-          mounted() {
-            this.scopedModel = this.params.node.data;
-            this.scopedIndex = this.params.node.rowIndex;
-            if (this.params.node.rowPinned !== 'bottom') this.useSlot = true;
+            const { data, rowIndex, rowPinned } = this.params.node;
+            return rowPinned
+              ? h('span', this.params.value)
+              : _scopedSlots[key]({
+                  model: data,
+                  $index: rowIndex
+                });
           }
         });
       });
-
-      // CustomComponents
-      _components['renderPagination'] = RenderPagination;
-      _components['renderPaginationTotal'] = RenderPaginationTotal;
-      _components['renderCustomizePanel'] = RenderCustomizePanel;
-
       return _components;
     }
   }
