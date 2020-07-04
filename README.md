@@ -163,17 +163,17 @@ const tableConfig = {
 该方式不必在全局安装时配置 httpInstance 选项
 
 ```js
-import axios from "./axiosInstance'
+import axios from './axiosInstance';
 // 1. 自定义请求函数
 const getUserList = params => {
-  return axis.get("/getUserList", params)
-}
+  return axios.get('/getUserList', params);
+};
 
 // 2. 使用
-import { getUserList } from "@/http/UserApi"
+import { getUserList } from '@/http/UserApi';
 const tableConfig = {
   url: getUserList
-}
+};
 ```
 
 #### 3. 对接口统一 Schema 配置，对 axios 实现 get,post 等请求封装 - 推荐
