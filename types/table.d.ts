@@ -2,7 +2,6 @@ interface ITableConfig {
   id: string;
   rowKey?: string;
   hasPage?: boolean;
-  isLoopSelect?: boolean;
   infiniteScroll?: boolean;
   isInitialData?: boolean;
   sortable?: boolean;

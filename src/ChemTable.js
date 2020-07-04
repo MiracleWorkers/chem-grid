@@ -43,6 +43,11 @@ export default {
       validator: value => {
         return isObject(value) && isArray(value.columns) && isArray(value.buttons);
       }
+    },
+    totalInfo: {
+      required: false,
+      validator: value => isObject(value),
+      default: () => ({})
     }
   },
   data() {
@@ -78,6 +83,12 @@ export default {
     params: {
       handler: function(newParams) {
         this.localParams = newParams;
+      },
+      deep: true
+    },
+    totalInfo: {
+      handler: function(newTotalInfo) {
+        this.gridApi.setPinnedBottomRowData([{ _rowNum: '合计', ...newTotalInfo }]);
       },
       deep: true
     }
@@ -305,6 +316,9 @@ export default {
     setData(sourceData = []) {
       this.gridApi.setRowData(sourceData);
       this.gridData = Object.freeze(sourceData);
+    },
+    getData() {
+      return this.gridData;
     },
     getCustomizeMenuItems(params) {
       const defaultItems = params.defaultItems.slice(0, 3);

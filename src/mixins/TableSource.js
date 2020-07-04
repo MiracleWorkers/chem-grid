@@ -1,4 +1,4 @@
-import { filterObjectNull, isFunction } from '../utils';
+import { filterObjectNull, isFunction, getFucParamsList } from '../utils';
 export default {
   methods: {
     async $_fetchSourceData(isReset = false) {
@@ -7,33 +7,51 @@ export default {
       this.showGridLoading();
       try {
         this.pagination.currentPage = isReset ? 1 : this.pagination.currentPage; // 重置分页
-        let fetchResponse = await this.$GRID_HTTP_INSTANCE(this.config.url, {
-          params: filterObjectNull({
-            ...this.localParams,
-            currentPage: this.pagination.currentPage,
-            pageSize: this.pagination.pageSize
-          })
-        });
+        let fetchResponse = await this.$_pullResponseByAxiosType();
+
+        const { list, total, page, count } = this.$GRID_RES_SCHEMA;
+        let { [list]: _list = [], [total]: _total = {}, [page]: _page = {} } = fetchResponse;
+
         // 1. 通过处理函数管道进行数据手动处理
         if (pipe && isFunction(pipe)) {
-          fetchResponse = pipe(fetchResponse);
+          _list = pipe(_list);
         }
-        const {
-          customPageList,
-          customTotal = {},
-          page: { totalItem = 10 }
-        } = fetchResponse;
-        this.gridData = Object.freeze(customPageList);
+
+        this.gridData = Object.freeze(_list);
         // 2. 设置统计信息
-        if (customTotal && Object.keys(customTotal).length) {
-          this.gridApi.setPinnedBottomRowData([{ _rowNum: '合计', ...customTotal }]);
+        if (_total && Object.keys(_total).length) {
+          this.gridApi.setPinnedBottomRowData([{ _rowNum: '合计', ..._total }]);
         }
         // 3. 重新勾选之前选中
         isReset ? (this.localSelected = []) : this.$_checkSelectedRow();
         // 4. 分页信息设置
-        this.pagination.total = totalItem;
+        this.pagination.total = _page[count] || 10;
       } finally {
         this.hideGridLoading();
+      }
+    },
+    // 打平用户不同方式获取方式： 1. 原生axios 2. 函数 3. 配置项
+    $_pullResponseByAxiosType() {
+      const _gridParams = filterObjectNull({
+        ...this.localParams,
+        currentPage: this.pagination.currentPage,
+        pageSize: this.pagination.pageSize
+      });
+      if (isFunction(this.config.url)) {
+        // 不依赖httpInstance，调用url函数
+        return this.config.url.call(this, _gridParams);
+      }
+      const funcParams = getFucParamsList(this.$GRID_HTTP_INSTANCE);
+      const funcName = this.$GRID_HTTP_INSTANCE.name;
+
+      if (funcParams.length === 0 && funcName === 'wrap') {
+        // axios原始使用方式，只能get方式
+        return this.$GRID_HTTP_INSTANCE(this.config.url, {
+          params: _gridParams
+        });
+      } else {
+        // 通过配置Schema封装，推荐
+        return this.$GRID_HTTP_INSTANCE(this.config.url, _gridParams);
       }
     },
     $_syncSelectedData() {

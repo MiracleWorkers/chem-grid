@@ -65,6 +65,17 @@ const removeLocalStorage = field => {
   window.localStorage.removeItem(field.toUpperCase());
 };
 
+const getFucParamsList = func => {
+  if (typeof func !== 'function') [];
+  var params = /[^(]+\(([^)]*)?\)/gm.exec(Function.prototype.toString.call(func));
+  if (params[1]) {
+    var args = params[1].replace(/[^,\w]*/g, '').split(',');
+    return args;
+  } else {
+    return [];
+  }
+};
+
 export {
   isArray,
   isFunction,
@@ -75,5 +86,6 @@ export {
   swapArrElement,
   setLocalStorage,
   getLocalStorage,
-  removeLocalStorage
+  removeLocalStorage,
+  getFucParamsList
 };

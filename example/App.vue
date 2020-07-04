@@ -19,6 +19,7 @@
 
 <script>
 import Login from './login.vue';
+import { fetch } from './http/index';
 export default {
   components: { Login },
   data() {
@@ -80,7 +81,8 @@ export default {
       tableConfig2: {
         id: 'purch_pro',
         multiple: true,
-        url: '/pri/purchase_plan/get_purchase_plan_detail',
+        // url: '/pri/purchase_plan/get_purchase_plan_detail',
+        url: fetch,
         items: [
           { column: 'contract_purchase_time', label: '日期' },
           { column: 'contract_purchase_no', label: '采购订单号' },

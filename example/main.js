@@ -1,11 +1,10 @@
 import Vue from 'vue';
-import axios from './http';
+import { instance } from './http';
 import ChemTable from '../src/index';
 Vue.use(ChemTable, {
-  httpInstance: axios
+  httpInstance: instance
 });
 
-Vue.prototype.$http = axios;
 import App from './App';
 
 new Vue({
