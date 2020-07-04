@@ -327,6 +327,9 @@ export default {
           this.columnApi.setColumnWidth(item.colId, item.width || 200, true);
         });
       });
+    },
+    getContextMenuItems() {
+      return ['copy', 'copyWithHeaders', 'separator', 'export'];
     }
   },
   render(h) {
@@ -339,7 +342,8 @@ export default {
           columnDefs: this.localColumns,
           rowData: this.gridData,
           frameworkComponents: this.registerComponents,
-          getMainMenuItems: this.getCustomizeMenuItems
+          getMainMenuItems: this.getCustomizeMenuItems,
+          getContextMenuItems: this.getContextMenuItems
         },
         on: {
           ...this.$listeners,
