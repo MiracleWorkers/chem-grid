@@ -1,14 +1,14 @@
 <template>
   <div>
     <login />
-    <!-- <chem-grid
+    <chem-grid
       ref="table"
       style="width:100%;height: 400px"
       :config="tableConfig"
       :params="tableParams"
       :auth="tableAuth"
       @row-select="handleRowSelect"
-    ></chem-grid> -->
+    ></chem-grid>
     <chem-grid ref="table" style="width:800px;height: 400px" :config="tableConfig2" :params="tableParams2">
       <template #commodity_num="{model, $index}">
         <div style="height: 60px">{{ model.commodity_num }} - {{ $index }}</div>

@@ -5,7 +5,15 @@ import 'chem-table-enterprise';
 import mixinSource from './mixins/TableSource';
 import mixinIframeComponents from './mixins/TableSlotComponents';
 import { defaultTableConfig, defaultTableItemConfig } from './DefaultConfig';
-import { isObject, isArray, swapArrElement, setLocalStorage, getLocalStorage, deepClone } from './utils';
+import {
+  isObject,
+  isArray,
+  swapArrElement,
+  setLocalStorage,
+  getLocalStorage,
+  removeLocalStorage,
+  deepClone
+} from './utils';
 
 import RenderPagination from './render/RenderPagination';
 import RenderPaginationTotal from './render/RenderPaginationTotal';
@@ -285,10 +293,10 @@ export default {
       this.panelColumns[_pinnedColumnIndex].pinned = pinned;
       this.handleSyncStorageSet();
     },
-    onColumnResized({ column: { actualWidth, colId }, finished, source }) {
-      if (finished === false || source === 'api') return;
-      const _resizeColumnIndex = this.panelColumns.findIndex(c => c.field === colId || c.colId === colId);
-      this.panelColumns[_resizeColumnIndex].width = actualWidth;
+    onColumnResized({ column, finished, source }) {
+      if (finished === false || source === 'api' || column === null) return;
+      const _resizeColumnIndex = this.panelColumns.findIndex(c => c.field === column.colId || c.colId === column.colId);
+      this.panelColumns[_resizeColumnIndex].width = column.actualWidth;
       this.handleSyncStorageSet();
     },
     refresh(isReset = false) {
@@ -297,6 +305,28 @@ export default {
     setData(sourceData = []) {
       this.gridApi.setRowData(sourceData);
       this.gridData = Object.freeze(sourceData);
+    },
+    getCustomizeMenuItems(params) {
+      const defaultItems = params.defaultItems.slice(0, 3);
+      defaultItems.push('separator');
+      defaultItems.push({
+        name: '重置全部列',
+        action: this.resetColumnsConfig
+      });
+      return defaultItems;
+    },
+    resetColumnsConfig() {
+      removeLocalStorage(this.$GRID_SALT + '_' + this.config.id);
+      const initialColumns = this.generateColumnConfig();
+      this.panelColumns = deepClone(initialColumns);
+      this.localColumns = deepClone(initialColumns);
+      this.$nextTick(() => {
+        // TODO: 此处gridApi.setColumnDefs无效，后续看版本升级会不会修复
+        this.columnApi.resetColumnState();
+        initialColumns.forEach(item => {
+          this.columnApi.setColumnWidth(item.colId, item.width || 200, true);
+        });
+      });
     }
   },
   render(h) {
@@ -308,7 +338,8 @@ export default {
           gridOptions: this.gridOptions,
           columnDefs: this.localColumns,
           rowData: this.gridData,
-          frameworkComponents: this.registerComponents
+          frameworkComponents: this.registerComponents,
+          getMainMenuItems: this.getCustomizeMenuItems
         },
         on: {
           ...this.$listeners,

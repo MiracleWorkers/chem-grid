@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import '../styles/renderCustomizePanel.scss';
-import { deepClone, removeLocalStorage } from '../utils';
+import { deepClone } from '../utils';
 
 import BaseCheckbox from '../component/BaseCheckbox.vue';
 
@@ -94,17 +94,7 @@ const panel = {
       this.params.api.closeToolPanel();
     },
     handleReset() {
-      removeLocalStorage(this.$GRID_SALT + '_' + this.Provider.config.id);
-      const initialColumns = this.Provider.generateColumnConfig();
-      this.Provider.panelColumns = deepClone(initialColumns);
-      this.Provider.localColumns = deepClone(initialColumns);
-      this.$nextTick(() => {
-        // TODO: 此处gridApi.setColumnDefs无效，后续看版本升级会不会修复
-        this.params.columnApi.resetColumnState();
-        initialColumns.forEach(item => {
-          this.params.columnApi.setColumnWidth(item.colId, item.width || 200, true);
-        });
-      });
+      this.Provider.resetColumnsConfig();
     },
     checkboxStateChange(field, isHide) {
       this.params.columnApi.setColumnVisible(field, !isHide);
