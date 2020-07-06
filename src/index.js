@@ -1,5 +1,5 @@
 import 'ag-grid-community/dist/styles/ag-grid.css';
-import 'ag-grid-community/dist/styles/ag-theme-balham.css';
+import './styles/resetStyle.scss';
 
 import ChemTable from './ChemTable';
 

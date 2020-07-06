@@ -213,3 +213,24 @@ const tableConfig = {
   url: 'getUserList'
 };
 ```
+
+## 修改主题色
+
+```scss
+@import '~ag-grid-community/src/styles/ag-theme-balham/sass/ag-theme-balham-mixin';
+
+.ag-theme-balham {
+  @include ag-theme-balham(
+    (
+      range-selection-background-color: rgba(blue, 0.2),
+      range-selection-border-color: blue
+    )
+  );
+
+  .chem-grid_handleButtons,
+  .chem-grid_base-checkbox,
+  .chem-grid_pagination {
+    color: ag-param(range-selection-border-color);
+  }
+}
+```

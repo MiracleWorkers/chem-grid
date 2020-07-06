@@ -4,6 +4,7 @@
   height: 100%;
   display: flex;
   align-items: center;
+  color: $THEME_COLOR;
 
   button {
     outline: none;
@@ -11,9 +12,13 @@
     background-color: transparent;
     cursor: pointer;
     margin-left: 2px;
-    color: $THEME_COLOR;
+    color: currentColor;
+    font-size: 13px;
     &:first-child {
       margin-left: 0;
+    }
+    &:active {
+      opacity: 0.7;
     }
 
     &:disabled {

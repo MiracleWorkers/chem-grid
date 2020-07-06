@@ -3,11 +3,11 @@
 $PAGINATION_HEIGHT: 40px;
 $PAGINATION_BUTTON_SIZE: 22px;
 
-.render_pagination-total {
+.chem-grid_pagination-total {
   line-height: $PAGINATION_HEIGHT;
 }
 
-.render_pagination {
+.chem-grid_pagination {
   height: $PAGINATION_HEIGHT;
 
   ul {
@@ -24,17 +24,18 @@ $PAGINATION_BUTTON_SIZE: 22px;
     text-align: center;
     outline: none;
     border-radius: 2px;
+    color: rgba($color: #000000, $alpha: 0.38);
     &[data-index] {
       cursor: pointer;
       &:hover {
-        color: $THEME_COLOR;
+        color: currentColor;
       }
     }
   }
 
   .pagination-item_active {
-    color: $THEME_COLOR;
-    border-color: $THEME_COLOR;
+    color: currentColor;
+    border-color: currentColor;
     font-weight: bold;
   }
 
@@ -65,9 +66,9 @@ $PAGINATION_BUTTON_SIZE: 22px;
       border-radius: 2px;
       text-align: center;
       margin: 0 2px;
-      caret-color: $THEME_COLOR;
+      caret-color: #666;
       &:focus {
-        border-color: $THEME_COLOR;
+        border-color: #999;
       }
     }
     // 去除number input的上下箭头
@@ -105,6 +106,10 @@ $PAGINATION_BUTTON_SIZE: 22px;
       padding: 0 10px 0 4px;
       &::-ms-expand {
         display: none;
+      }
+
+      option {
+        background-color: red;
       }
     }
   }

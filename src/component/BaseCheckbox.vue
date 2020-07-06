@@ -1,5 +1,5 @@
 <template>
-  <label class="chem_base-checkbox">
+  <label class="chem-grid_base-checkbox">
     <input type="checkbox" :checked="hide === false" @change="this.handleChange" />
     <div class="chem_base-checkout_inner"></div>
   </label>
@@ -30,12 +30,13 @@ export default {
 
 <style lang="scss" scoped>
 @import '../styles/var.scss';
-.chem_base-checkbox {
+.chem-grid_base-checkbox {
   display: inline-block;
   vertical-align: middle;
   input[type='checkbox'] {
     display: none;
   }
+  color: $THEME_COLOR;
 
   .chem_base-checkout_inner {
     position: relative;
@@ -45,6 +46,7 @@ export default {
     border-radius: 3px;
     border: 1px solid #333;
     transition: all ease-in-out 250ms;
+    cursor: pointer;
     &:after {
       position: absolute;
       top: 50%;
@@ -65,8 +67,8 @@ export default {
   }
 
   input[type='checkbox']:checked + .chem_base-checkout_inner {
-    background-color: $THEME_COLOR;
-    border-color: $THEME_COLOR;
+    background-color: currentColor;
+    border-color: currentColor;
     &:after {
       opacity: 1;
     }

@@ -134,9 +134,6 @@ export default {
       };
     }
   },
-  mounted() {
-    console.log(this.tableConfig2);
-  },
   methods: {
     handleRowSelect(data) {
       console.log(data);

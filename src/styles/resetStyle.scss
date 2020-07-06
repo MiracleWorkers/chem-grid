@@ -1,0 +1,10 @@
+@import '~ag-grid-community/src/styles/ag-theme-balham/sass/ag-theme-balham-mixin';
+
+.ag-theme-balham {
+  @include ag-theme-balham(
+    (
+      // range-selection-background-color: rgba(red, 0.2),
+        // range-selection-border-color: red
+    )
+  );
+}

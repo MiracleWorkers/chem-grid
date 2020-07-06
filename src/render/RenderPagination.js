@@ -41,7 +41,7 @@ const pagination = {
     const showFirstButton = this.dynamicPageList.indexOf(1) === -1;
     const showLastButton = this.dynamicPageList.indexOf(this.maxPage) === -1;
     return (
-      <div class="render_pagination">
+      <div class="chem-grid_pagination">
         <ul onClick={this.handlePaginationLink} class={disabled ? 'pagination-disabled' : null}>
           {showFirstButton ? (
             <li class={currentPage === 1 ? 'pagination-button_disabled' : null} data-index="first">
