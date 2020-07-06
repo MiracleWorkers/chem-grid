@@ -32,7 +32,6 @@ instance.interceptors.response.use(response => {
 
 // 方式二: 将axios封装成函数
 const fetch = params => {
-  console.log(params);
   return instance('/pri/purchase_plan/get_purchase_plan_detail', {
     params: { ...params }
   });

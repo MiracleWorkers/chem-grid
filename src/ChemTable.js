@@ -18,6 +18,7 @@ import {
 import RenderPagination from './render/RenderPagination';
 import RenderPaginationTotal from './render/RenderPaginationTotal';
 import RenderCustomizePanel from './render/RenderCustomizePanel';
+import RenderHandleButtons from './render/RenderHandleButtons';
 
 export default {
   name: 'chem-grid',
@@ -66,7 +67,8 @@ export default {
       registerComponents: {
         renderPagination: RenderPagination,
         renderPaginationTotal: RenderPaginationTotal,
-        renderCustomizePanel: RenderCustomizePanel
+        renderCustomizePanel: RenderCustomizePanel,
+        renderHandleButtons: RenderHandleButtons
       },
 
       rowKey: this.config.rowKey || defaultTableConfig.rowKey,
@@ -91,6 +93,16 @@ export default {
         this.gridApi.setPinnedBottomRowData([{ _rowNum: '合计', ...newTotalInfo }]);
       },
       deep: true
+    },
+    config: {
+      handler: function() {
+        this.localColumns = this.generateColumnConfig();
+        this.panelColumns = this.generateColumnConfig();
+        this.$nextTick(() => {
+          this.gridApi.refreshCells({ force: true, suppressFlash: false });
+        });
+      },
+      deep: true
     }
   },
   created() {
@@ -104,26 +116,21 @@ export default {
     this.panelColumns = this.generateColumnConfig();
     if (this.isInitialData === false) return;
     this.$_fetchSourceData();
-    this.$nextTick(() => {
-      this.gridApi.resetRowHeights();
-    });
   },
 
   computed: {
-    // 权限校验
-    realColumnsAndButtons() {
-      const { items = [], buttons = [] } = this.config;
-      if (!this.auth) return { items, buttons };
+    // 权限校验columns
+    realColumnsAfterAuth() {
+      const { items = [] } = this.config;
+      if (!this.auth) return items;
       const authColumns = this.auth ? this.auth.columns : [];
-      const authButtons = this.auth ? this.auth.buttons : [];
 
       const _filterItems = [];
       items.forEach(item => {
         const target = authColumns.find(t => t.code === item.column);
         if (target) _filterItems.push({ ...item, label: target.name });
       });
-      const _filterButtons = buttons.filter(btn => authButtons.indexOf(btn) > -1);
-      return { items: _filterItems, buttons: _filterButtons };
+      return _filterItems;
     }
   },
   methods: {
@@ -205,7 +212,8 @@ export default {
           resizable: true
         });
       }
-      this.realColumnsAndButtons.items.forEach(item => {
+      // 处理用户传入的配置
+      this.realColumnsAfterAuth.forEach(item => {
         const _column = {
           headerName: item.label,
           field: item.column,
@@ -222,6 +230,9 @@ export default {
           }
         };
         if (item.width) _column['width'] = item.width;
+        if (item.buttons) {
+          _column['cellRendererFramework'] = this.registerComponents.renderHandleButtons(item.buttons);
+        }
         if (item.slot) {
           _column['cellRendererFramework'] = this.registerComponents[item.slot];
           _column['autoHeight'] = true;
@@ -352,6 +363,7 @@ export default {
       {
         class: 'ag-theme-balham',
         attrs: {
+          context: this,
           gridOptions: this.gridOptions,
           columnDefs: this.localColumns,
           rowData: this.gridData,

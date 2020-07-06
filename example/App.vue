@@ -25,8 +25,11 @@ export default {
   data() {
     return {
       tableAuth: {
-        columns: [{ code: 'company_name', name: '门店名称11111' }],
-        buttons: []
+        columns: [
+          { code: 'company_name', name: '门店名称11111' },
+          { code: 'handle', name: '操作' }
+        ],
+        buttons: ['edit', 'look']
       },
       tableParams: {
         menu_id: '84112ae0cac0a44cb08e74ee8200eed6',
@@ -72,13 +75,34 @@ export default {
           { column: 'is_split', label: '是否拆零' },
           { column: 'is_overdue', label: '库存状态' },
           { column: 'rec_user_name', label: '收货人' },
-          { column: 'che_user_name', label: '验收人' }
+          { column: 'che_user_name', label: '验收人' },
+          {
+            column: 'handle',
+            label: '操作',
+            pin: 'right',
+            width: 120,
+            buttons: [
+              {
+                label: '查看',
+                auth: 'look',
+                click: () => {
+                  this.FLAG_BUTTON = false;
+                }
+              },
+              { label: '编辑', auth: 'edit', click: () => {} }
+            ]
+          }
         ]
       },
       tableParams2: {
         pageSize: 500
       },
-      tableConfig2: {
+      FLAG_BUTTON: true
+    };
+  },
+  computed: {
+    tableConfig2() {
+      return {
         id: 'purch_pro',
         multiple: true,
         // url: '/pri/purchase_plan/get_purchase_plan_detail',
@@ -107,8 +131,11 @@ export default {
           { column: 'num_of_check', label: '已验收数量' },
           { column: 'commodity_possessor', label: '上市许可持有人' }
         ]
-      }
-    };
+      };
+    }
+  },
+  mounted() {
+    console.log(this.tableConfig2);
   },
   methods: {
     handleRowSelect(data) {

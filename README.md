@@ -50,12 +50,12 @@ Vue.use(chemGrid, {
 
 ### props
 
-| Prop      | 描述           |
-| --------- | -------------- |
-| config    | schema 配置    |
-| params    | 请求参数       |
-| auth      | 权限信息       |
-| totalInfo | 自定义统计信息 |
+| Prop      | 描述           | 值                                 |
+| --------- | -------------- | ---------------------------------- |
+| config    | schema 配置    | 下面有 config 详细介绍             |
+| params    | 请求参数       | \{\}                               |
+| auth      | 权限信息       | \{ columns: \[\], buttons; \[\] \} |
+| totalInfo | 自定义统计信息 | \{\}                               |
 
 ### event
 
@@ -87,7 +87,6 @@ Vue.use(chemGrid, {
 | sortConfig    | 排序功能传递的参数                                           | \['desc', 'asc', null\] |
 | pageCount     | 分页器显示按钮的个数                                         | 7                       |
 | items         | 【必填】每个列的配置                                         | null                    |
-| buttons       | 最后一列显示的按钮                                           | null                    |
 
 ##### items
 
@@ -101,15 +100,16 @@ Vue.use(chemGrid, {
 | formatter | 列的值格式化                                         | Function\(value,rowData\) |
 | pin       | 列的固定                                             | left, right, null         |
 | hide      | 列的隐藏                                             | false                     |
+| buttons   | 最后一列显示的按钮配置                               | null                      |
 
 ##### buttons
 
-| Name  | 描述         | 值                           |
-| ----- | ------------ | ---------------------------- |
-| label | 按钮文字     | string                       |
-| auth  | 按钮权限字段 | string                       |
-| show  | 按钮是否显示 | boolean \| Function<boolean> |
-| click | 按钮点击函数 | Function\(rowData, index\)   |
+| Name  | 描述         | 值                         |
+| ----- | ------------ | -------------------------- |
+| label | 按钮文字     | string                     |
+| auth  | 按钮权限字段 | string                     |
+| show  | 按钮是否显示 | boolean                    |
+| click | 按钮点击函数 | Function\(rowData, index\) |
 
 ---
 

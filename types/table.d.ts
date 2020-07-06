@@ -12,7 +12,6 @@ interface ITableConfig {
   sortConfig?: string[];
   pageCount?: number;
   items: ITableItemConfig[];
-  buttons?: ITableOperateConfig;
 }
 
 interface ITableItemConfig {
@@ -24,11 +23,13 @@ interface ITableItemConfig {
   formatter?: Function;
   pin?: 'left' | 'right' | null;
   hide?: boolean;
+  buttons?: ITableOperateConfig[];
 }
 
 interface ITableOperateConfig {
   label: string;
   auth?: string;
-  show?: boolean | Function<boolean>;
+  show?: boolean;
+  disabled?: boolean;
   click: Function;
 }
