@@ -15,10 +15,10 @@ import {
   deepClone
 } from './utils';
 
-import RenderPagination from './render/RenderPagination';
-import RenderPaginationTotal from './render/RenderPaginationTotal';
-import RenderCustomizePanel from './render/RenderCustomizePanel';
-import RenderHandleButtons from './render/RenderHandleButtons';
+import RenderPagination from './render/RenderPagination.jsx';
+import RenderPaginationTotal from './render/RenderPaginationTotal.jsx';
+import RenderCustomizePanel from './render/RenderCustomizePanel.jsx';
+import RenderHandleButtons from './render/RenderHandleButtons.jsx';
 
 export default {
   name: 'chem-grid',
@@ -136,7 +136,7 @@ export default {
   methods: {
     generateGridOptions() {
       if (this.validateConfig(this.config) === false) return {};
-      const { infiniteScroll, sortConfig } = {
+      const { infiniteScroll, sortConfig, multiple } = {
         ...defaultTableConfig,
         ...this.config
       };
@@ -163,7 +163,7 @@ export default {
       return {
         rowModelType: infiniteScroll ? 'infinite' : 'clientSide',
         localeText: Object.freeze(localeText),
-        rowSelection: 'multiple',
+        rowSelection: multiple ? 'multiple' : 'single',
         suppressRowClickSelection: true,
         suppressDragLeaveHidesColumns: true, // 禁止列拖动隐藏
         rowDeselection: true, // 通过space取消选择

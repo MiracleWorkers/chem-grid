@@ -222,6 +222,7 @@ const tableConfig = {
 .ag-theme-balham {
   @include ag-theme-balham(
     (
+      selected-row-background-color: rgba(blue, 0.25),
       range-selection-background-color: rgba(blue, 0.2),
       range-selection-border-color: blue
     )
