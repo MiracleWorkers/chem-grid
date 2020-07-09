@@ -15,10 +15,10 @@ import {
   deepClone
 } from './utils';
 
-import RenderPagination from './render/RenderPagination.jsx';
-import RenderPaginationTotal from './render/RenderPaginationTotal.jsx';
-import RenderCustomizePanel from './render/RenderCustomizePanel.jsx';
-import RenderHandleButtons from './render/RenderHandleButtons.jsx';
+import RenderPagination from './render/RenderPagination.js';
+import RenderPaginationTotal from './render/RenderPaginationTotal.js';
+import RenderCustomizePanel from './render/RenderCustomizePanel.js';
+import RenderHandleButtons from './render/RenderHandleButtons.js';
 
 export default {
   name: 'chem-grid',

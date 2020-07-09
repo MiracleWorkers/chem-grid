@@ -1,10 +1,8 @@
-@import './var.scss';
-
 .chem-grid_handleButtons {
   height: 100%;
   display: flex;
   align-items: center;
-  color: $THEME_COLOR;
+  color: #0091ea;
 
   button {
     outline: none;

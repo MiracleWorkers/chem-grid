@@ -1,12 +1,17 @@
 {
   "name": "chem-grid",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "main": "src/index.js",
   "typings": "types/table.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/MiracleWorkers/chem-grid"
   },
+  "files": [
+    "src",
+    "dist/*.js",
+    "types/*.d.ts"
+  ],
   "keywords": [
     "vue",
     "ag-grid",
@@ -14,37 +19,50 @@
     "grid",
     "scheme",
     "schema",
-    "json",
-    ""
+    "json"
   ],
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "build": "rollup --config rollup.config.js",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
     "ag-grid-community": "^23.2.1",
     "ag-grid-vue": "^23.2.1",
-    "chem-table-enterprise": "^1.0.2",
-    "node-sass": "^4.14.1",
-    "sass-loader": "^8.0.2",
-    "vue": "^2.6.11",
-    "vue-class-component": "^7.2.3",
-    "vue-property-decorator": "^9.0.0"
+    "chem-table-enterprise": "^1.0.2"
   },
   "devDependencies": {
+    "@babel/core": "^7.10.4",
+    "@babel/plugin-transform-runtime": "^7.10.4",
+    "@babel/preset-env": "^7.10.4",
+    "@babel/runtime": "^7.10.4",
+    "@rollup/plugin-babel": "^5.0.4",
+    "@rollup/plugin-commonjs": "^13.0.0",
+    "@rollup/plugin-node-resolve": "^8.1.0",
+    "@vue/babel-helper-vue-jsx-merge-props": "^1.0.0",
+    "@vue/babel-preset-jsx": "^1.1.2",
     "@vue/cli-plugin-babel": "~4.4.0",
     "@vue/cli-plugin-eslint": "~4.4.0",
     "@vue/cli-plugin-unit-jest": "~4.4.0",
     "@vue/cli-service": "~4.4.0",
     "@vue/test-utils": "^1.0.3",
+    "node-sass": "^4.14.1",
+    "sass-loader": "^8.0.2",
+    "vue": "^2.6.11",
+    "vue-class-component": "^7.2.3",
+    "vue-property-decorator": "^9.0.0",
     "axios": "^0.19.2",
     "babel-eslint": "^10.1.0",
     "core-js": "^3.6.5",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",
     "qs": "^6.9.4",
+    "rollup": "^2.21.0",
+    "rollup-plugin-postcss": "^3.1.2",
+    "rollup-plugin-sass": "^1.2.2",
+    "rollup-plugin-terser": "^6.1.0",
+    "rollup-plugin-vue": "^5.1.9",
     "vue-template-compiler": "^2.6.11"
   }
 }

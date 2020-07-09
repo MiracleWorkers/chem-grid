@@ -28,12 +28,12 @@ const handle = {
       ) : null;
     }
   },
-  render(h) {
+  render() {
     const { rowPinned } = this.params.node;
     return (
       <div class="chem-grid_handleButtons">
         {buttonList.map(btn => {
-          return rowPinned ? h('span', this.params.value) : this.renderButton(btn);
+          return rowPinned ? <span>{this.params.value}</span> : this.renderButton(btn);
         })}
       </div>
     );

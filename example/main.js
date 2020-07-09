@@ -1,6 +1,8 @@
 import Vue from 'vue';
 import { instance } from './http';
-import ChemTable from '../src/index';
+
+import ChemTable from '../dist/chem-grid';
+// import ChemTable from '../src/index';
 import './theme.scss';
 Vue.use(ChemTable, {
   httpInstance: instance

@@ -28,15 +28,14 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-@import '../styles/var.scss';
+<style lang="scss">
 .chem-grid_base-checkbox {
   display: inline-block;
   vertical-align: middle;
   input[type='checkbox'] {
     display: none;
   }
-  color: $THEME_COLOR;
+  color: #0091ea;
 
   .chem_base-checkout_inner {
     position: relative;
