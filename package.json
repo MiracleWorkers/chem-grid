@@ -1,7 +1,7 @@
 {
   "name": "chem-grid",
-  "version": "1.1.5",
-  "main": "src/index.js",
+  "version": "1.1.6",
+  "main": "dist/chem-grid.js",
   "typings": "types/table.d.ts",
   "repository": {
     "type": "git",
