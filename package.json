@@ -1,6 +1,6 @@
 {
   "name": "chem-grid",
-  "version": "1.1.7",
+  "version": "1.1.8",
   "main": "dist/chem-grid.js",
   "typings": "types/table.d.ts",
   "repository": {
@@ -30,7 +30,9 @@
   "dependencies": {
     "ag-grid-community": "^23.2.1",
     "ag-grid-vue": "^23.2.1",
-    "chem-table-enterprise": "^1.0.2"
+    "chem-table-enterprise": "^1.0.2",
+    "vue-class-component": "^7.2.3",
+    "vue-property-decorator": "^9.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.10.4",
@@ -50,8 +52,6 @@
     "node-sass": "^4.14.1",
     "sass-loader": "^8.0.2",
     "vue": "^2.6.11",
-    "vue-class-component": "^7.2.3",
-    "vue-property-decorator": "^9.0.0",
     "axios": "^0.19.2",
     "babel-eslint": "^10.1.0",
     "core-js": "^3.6.5",
