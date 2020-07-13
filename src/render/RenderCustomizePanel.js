@@ -2,7 +2,7 @@ import Vue from 'vue';
 import '../styles/renderCustomizePanel.scss';
 import { deepClone } from '../utils';
 
-import BaseCheckbox from '../component/BaseCheckbox.vue';
+import BaseCheckbox from '../component/BaseCheckbox';
 
 const HEIGHT = 22;
 

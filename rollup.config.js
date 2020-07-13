@@ -41,7 +41,6 @@ export default {
       include: /node_modules/
     }),
     vue(),
-    // sass(),
     postcss(),
     babel({
       exclude: 'node_modules/**',
@@ -66,7 +65,7 @@ export default {
         [
           '@babel/plugin-transform-runtime',
           {
-            regenerator: false
+            // regenerator: false
           }
         ]
       ]

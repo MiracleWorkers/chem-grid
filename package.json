@@ -1,6 +1,6 @@
 {
   "name": "chem-grid",
-  "version": "1.1.8",
+  "version": "1.2.3",
   "main": "dist/chem-grid.js",
   "typings": "types/table.d.ts",
   "repository": {
@@ -9,7 +9,7 @@
   },
   "files": [
     "src",
-    "dist/*.js",
+    "dist",
     "types/*.d.ts"
   ],
   "keywords": [
@@ -32,7 +32,8 @@
     "ag-grid-vue": "^23.2.1",
     "chem-table-enterprise": "^1.0.2",
     "vue-class-component": "^7.2.3",
-    "vue-property-decorator": "^9.0.0"
+    "vue-property-decorator": "^9.0.0",
+    "core-js": "^2.6.11"
   },
   "devDependencies": {
     "@babel/core": "^7.10.4",
@@ -49,20 +50,19 @@
     "@vue/cli-plugin-unit-jest": "~4.4.0",
     "@vue/cli-service": "~4.4.0",
     "@vue/test-utils": "^1.0.3",
-    "node-sass": "^4.14.1",
-    "sass-loader": "^8.0.2",
-    "vue": "^2.6.11",
     "axios": "^0.19.2",
     "babel-eslint": "^10.1.0",
-    "core-js": "^3.6.5",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",
+    "node-sass": "^4.14.1",
     "qs": "^6.9.4",
     "rollup": "^2.21.0",
     "rollup-plugin-postcss": "^3.1.2",
     "rollup-plugin-sass": "^1.2.2",
     "rollup-plugin-terser": "^6.1.0",
     "rollup-plugin-vue": "^5.1.9",
+    "sass-loader": "^8.0.2",
+    "vue": "^2.6.11",
     "vue-template-compiler": "^2.6.11"
   }
 }
