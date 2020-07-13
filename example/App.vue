@@ -1,27 +1,24 @@
 <template>
   <div>
-    <login />
-    <chem-grid
+    <!-- <x-table
       ref="table"
       style="width:100%;height: 400px"
       :config="tableConfig"
       :params="tableParams"
       :auth="tableAuth"
       @row-select="handleRowSelect"
-    ></chem-grid>
-    <chem-grid ref="table" style="width:800px;height: 400px" :config="tableConfig2" :params="tableParams2">
+    ></x-table> -->
+    <x-table ref="table" style="width:800px;height: 400px" :config="tableConfig2" :params="tableParams2">
       <template #commodity_num="{model, $index}">
         <div style="height: 60px">{{ model.commodity_num }} - {{ $index }}</div>
       </template>
-    </chem-grid>
+    </x-table>
   </div>
 </template>
 
 <script>
-import Login from './login.vue';
 import { fetch } from './http/index';
 export default {
-  components: { Login },
   data() {
     return {
       tableAuth: {

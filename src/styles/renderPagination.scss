@@ -103,13 +103,6 @@ $PAGINATION_BUTTON_SIZE: 22px;
       -webkit-appearance: none;
       cursor: pointer;
       padding: 0 10px 0 4px;
-      &::-ms-expand {
-        display: none;
-      }
-
-      option {
-        background-color: red;
-      }
     }
   }
 }

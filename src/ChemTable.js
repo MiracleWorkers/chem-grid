@@ -21,7 +21,7 @@ import RenderCustomizePanel from './render/RenderCustomizePanel.js';
 import RenderHandleButtons from './render/RenderHandleButtons.js';
 
 export default {
-  name: 'chem-grid',
+  name: 'chemGrid',
   inheritAttrs: false,
   components: { AgGridVue },
   mixins: [mixinSource, mixinIframeComponents],
@@ -359,7 +359,7 @@ export default {
   },
   render(h) {
     return h(
-      AgGridVue.name,
+      'ag-grid-vue',
       {
         class: 'ag-theme-balham',
         attrs: {

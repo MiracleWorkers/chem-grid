@@ -128,8 +128,12 @@ const panel = {
           </ul>
         </div>
         <div class="customize_drag_content-buttons">
-          <button onClick={this.handleReset}>恢复默认</button>
-          <button onClick={this.handleClose}>关闭</button>
+          <div class="button" onClick={this.handleReset}>
+            恢复默认
+          </div>
+          <div class="button" onClick={this.handleClose}>
+            关闭
+          </div>
         </div>
       </div>
     );
