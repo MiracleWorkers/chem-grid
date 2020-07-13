@@ -1,5 +1,6 @@
 <template>
   <div>
+    <login></login>
     <!-- <x-table
       ref="table"
       style="width:100%;height: 400px"
@@ -18,7 +19,9 @@
 
 <script>
 import { fetch } from './http/index';
+import Login from './login.vue';
 export default {
+  components: { Login },
   data() {
     return {
       tableAuth: {

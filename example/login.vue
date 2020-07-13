@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import { BASE_URL } from './http';
+import { BASE_URL, instance } from './http';
 export default {
   data() {
     return {
@@ -21,7 +21,7 @@ export default {
   },
   methods: {
     login() {
-      this.$http.post('/ajaxLogin', {
+      instance.post('/ajaxLogin', {
         account: this.userName,
         pwd: this.userPwd,
         code: this.validateCode
