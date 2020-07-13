@@ -136,7 +136,7 @@ export default {
   methods: {
     generateGridOptions() {
       if (this.validateConfig(this.config) === false) return {};
-      const { infiniteScroll, sortConfig, multiple } = {
+      const { infiniteScroll, sortConfig, multiple, url } = {
         ...defaultTableConfig,
         ...this.config
       };
@@ -170,7 +170,7 @@ export default {
         suppressMultiSort: true, // 不允许多排序
         enableRangeSelection: true,
         sortingOrder: sortConfig,
-        statusBar: _statusBarConfig, // 底部状态栏
+        statusBar: url ? _statusBarConfig : null, // 底部状态栏
         sideBar: _customizePanel, // 自定义侧边栏
         icons: _customizeIcon, // 自定义图标
         immutableColumns: true,
