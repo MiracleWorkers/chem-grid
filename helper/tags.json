@@ -1,0 +1,6 @@
+{
+  "chem-grid": {
+    "attributes": ["config", "auth", "params", "total-info"],
+    "description": "chem-grid表格 - 通过配置项自动生成展示表格"
+  }
+}

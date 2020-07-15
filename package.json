@@ -1,8 +1,8 @@
 {
   "name": "chem-grid",
-  "version": "1.2.3",
+  "version": "1.2.9",
   "main": "dist/chem-grid.js",
-  "typings": "types/table.d.ts",
+  "typings": "types/index.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/MiracleWorkers/chem-grid"
@@ -10,7 +10,8 @@
   "files": [
     "src",
     "dist",
-    "types/*.d.ts"
+    "types",
+    "helper"
   ],
   "keywords": [
     "vue",
@@ -22,8 +23,9 @@
     "json"
   ],
   "scripts": {
+    "clear": "rm -rf dist",
     "serve": "vue-cli-service serve",
-    "build": "rollup --config rollup.config.js",
+    "build": "npm run clear && rollup --config rollup.config.js",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint"
   },
@@ -32,8 +34,7 @@
     "ag-grid-vue": "^23.2.1",
     "chem-table-enterprise": "^1.0.2",
     "vue-class-component": "^7.2.3",
-    "vue-property-decorator": "^9.0.0",
-    "core-js": "^2.6.11"
+    "vue-property-decorator": "^9.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.10.4",
@@ -64,5 +65,9 @@
     "sass-loader": "^8.0.2",
     "vue": "^2.6.11",
     "vue-template-compiler": "^2.6.11"
+  },
+  "vetur": {
+    "tags": "helper/tags.json",
+    "attributes": "helper/attributes.json"
   }
 }

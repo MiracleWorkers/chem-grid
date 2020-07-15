@@ -1,0 +1,18 @@
+{
+  "chem-grid/config": {
+    "type": "object",
+    "description": "表格用于展示的配置"
+  },
+  "chem-grid/auth": {
+    "type": "object",
+    "description": "权限配置-控制列是否显示和按钮是否展示"
+  },
+  "chem-grid/params": {
+    "type": "object",
+    "description": "查询参数设置 - 用于通过url拉取数据时使用"
+  },
+  "chem-grid/total-info": {
+    "type": "object",
+    "description": "表格合计信息"
+  }
+}

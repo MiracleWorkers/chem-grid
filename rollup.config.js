@@ -18,25 +18,10 @@ export default {
       file: 'dist/chem-grid.min.js',
       sourcemap: true,
       plugins: [terser()]
-    },
-    {
-      format: 'umd',
-      file: 'dist/chem-grid.umd.js',
-      name: 'chemGrid',
-      sourcemap: true
-    },
-    {
-      format: 'umd',
-      file: 'dist/chem-grid.umd.min.js',
-      name: 'chemGrid',
-      sourcemap: true,
-      plugins: [terser()]
     }
   ],
   plugins: [
-    nodeResolve({
-      extensions: ['.js', '.vue']
-    }),
+    nodeResolve(),
     commonJs({
       include: /node_modules/
     }),
@@ -47,28 +32,16 @@ export default {
       babelHelpers: 'runtime',
       presets: [
         [
-          '@vue/babel-preset-jsx',
-          {
-            injectH: false
-          }
-        ],
-        [
           '@babel/preset-env',
           {
             useBuiltIns: 'usage',
             modules: false,
             corejs: 3
           }
-        ]
+        ],
+        ['@vue/babel-preset-jsx']
       ],
-      plugins: [
-        [
-          '@babel/plugin-transform-runtime',
-          {
-            // regenerator: false
-          }
-        ]
-      ]
+      plugins: ['@babel/plugin-transform-runtime']
     })
   ],
   external: ['vue', 'chem-table-enterprise', 'ag-grid-vue']
