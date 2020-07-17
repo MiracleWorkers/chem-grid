@@ -74,8 +74,8 @@ export default {
       rowKey: this.config.rowKey || defaultTableConfig.rowKey,
       pagination: {
         pageCount: this.config.pageCount || defaultTableConfig.pageCount,
-        pageSize: 50,
-        total: 10,
+        pageSize: 100,
+        total: 0,
         currentPage: 1,
         disabled: false
       }
@@ -115,7 +115,7 @@ export default {
     this.localColumns = this.generateColumnConfig();
     this.panelColumns = this.generateColumnConfig();
     if (this.isInitialData === false) return;
-    this.$_fetchSourceData();
+    this.refresh();
   },
 
   computed: {
@@ -140,9 +140,12 @@ export default {
         ...defaultTableConfig,
         ...this.config
       };
-
-      const _statusBarConfig = {
-        statusPanels: [{ statusPanel: 'renderPaginationTotal', align: 'left' }, { statusPanel: 'renderPagination' }]
+      // 底部状态栏
+      const _statusBarConfig = () => {
+        if (url === undefined || infiniteScroll) return null;
+        return {
+          statusPanels: [{ statusPanel: 'renderPaginationTotal', align: 'left' }, { statusPanel: 'renderPagination' }]
+        };
       };
 
       const _customizePanel = {
@@ -161,7 +164,7 @@ export default {
       };
 
       return {
-        rowModelType: infiniteScroll ? 'infinite' : 'clientSide',
+        rowModelType: infiniteScroll ? 'serverSide' : 'clientSide',
         localeText: Object.freeze(localeText),
         rowSelection: multiple ? 'multiple' : 'single',
         suppressRowClickSelection: true,
@@ -170,20 +173,22 @@ export default {
         suppressMultiSort: true, // 不允许多排序
         enableRangeSelection: true,
         sortingOrder: sortConfig,
-        statusBar: url ? _statusBarConfig : null, // 底部状态栏
+        statusBar: _statusBarConfig(), // 底部状态栏
         sideBar: _customizePanel, // 自定义侧边栏
         icons: _customizeIcon, // 自定义图标
-        immutableColumns: true,
+        // immutableColumns: true,
         ...this.$attrs
       };
     },
     generateColumnConfig() {
-      const { sortable, showIndex, multiple, url } = {
+      const { sortable, showIndex, multiple, url, infiniteScroll } = {
         ...defaultTableConfig,
         ...this.config
       };
       const _columnDefs = [];
-      if (multiple || defaultTableConfig.multiple) {
+
+      const _isMultiple = multiple !== undefined ? multiple : defaultTableConfig.multiple;
+      if (_isMultiple) {
         _columnDefs.push({
           colId: '_checkbox',
           pinned: 'left',
@@ -194,7 +199,9 @@ export default {
           headerCheckboxSelection: true
         });
       }
-      if (showIndex || defaultTableConfig.showIndex) {
+
+      const _isShowIndex = showIndex !== undefined ? showIndex : defaultTableConfig.showIndex;
+      if (_isShowIndex) {
         _columnDefs.push({
           headerName: '#',
           colId: '_rowNum',
@@ -204,10 +211,14 @@ export default {
           cellStyle: { display: 'flex', alignItems: 'center' },
           suppressMenu: true,
           valueGetter: params => {
-            const value = params.data._rowNum;
-            const _currentPage = this.pagination.currentPage;
-            const _pageSize = this.pagination.pageSize;
-            return value ? value : (_currentPage - 1) * _pageSize + params.node.rowIndex + 1;
+            if (infiniteScroll) {
+              return params.node.rowIndex + 1;
+            } else {
+              const value = params.data._rowNum;
+              const _currentPage = this.pagination.currentPage;
+              const _pageSize = this.pagination.pageSize;
+              return value ? value : (_currentPage - 1) * _pageSize + params.node.rowIndex + 1;
+            }
           },
           resizable: true
         });
@@ -322,7 +333,7 @@ export default {
       this.handleSyncStorageSet();
     },
     refresh(isReset = false) {
-      this.$_fetchSourceData(isReset);
+      this.config.infiniteScroll ? this.$_infiniteScroll() : this.$_fetchSourceData(isReset);
     },
     setData(sourceData = []) {
       this.gridApi.setRowData(sourceData);

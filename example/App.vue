@@ -11,7 +11,7 @@
     ></x-table> -->
     <x-table ref="table" style="width:800px;height: 400px" :config="tableConfig2" :params="tableParams2">
       <template #commodity_num="{model, $index}">
-        <div style="height: 60px">{{ model.commodity_num }} - {{ $index }}</div>
+        <div style="height: 60px; background-color: red">{{ model.commodity_num }} - {{ $index }}</div>
       </template>
     </x-table>
   </div>
@@ -104,9 +104,10 @@ export default {
     tableConfig2() {
       return {
         id: 'purch_pro',
-        multiple: true,
         // url: '/pri/purchase_plan/get_purchase_plan_detail',
         url: fetch,
+        multiple: false,
+        infiniteScroll: true,
         items: [
           { column: 'contract_purchase_time', label: '日期' },
           { column: 'contract_purchase_no', label: '采购订单号' },
