@@ -6,6 +6,7 @@ $THEME_COLOR: red;
     (
       selected-row-background-color: rgba($THEME_COLOR, 0.25),
       range-selection-background-color: rgba($THEME_COLOR, 0.2),
+      range-selection-highlight-color: rgba($THEME_COLOR, 0.35),
       range-selection-border-color: $THEME_COLOR
     )
   );

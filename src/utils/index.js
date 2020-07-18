@@ -8,7 +8,7 @@ const filterObjectNull = obj => {
   }
   const _filterAfter = {};
   for (let key in obj) {
-    if (Object.prototype.hasOwnProperty.call(obj, key) && obj[key] !== null && obj[key] !== undefined) {
+    if (Object.prototype.hasOwnProperty.call(obj, key) && obj[key] !== null && obj[key] !== undefined && obj[key]) {
       _filterAfter[key] = obj[key];
     }
   }

@@ -14,6 +14,9 @@
         <div style="height: 60px; background-color: red">{{ model.commodity_num }} - {{ $index }}</div>
       </template>
     </x-table>
+    <div>
+      <button @click="handleReset">重置</button>
+    </div>
   </div>
 </template>
 
@@ -94,9 +97,7 @@ export default {
           }
         ]
       },
-      tableParams2: {
-        pageSize: 500
-      },
+      tableParams2: {},
       FLAG_BUTTON: true
     };
   },
@@ -106,7 +107,7 @@ export default {
         id: 'purch_pro',
         // url: '/pri/purchase_plan/get_purchase_plan_detail',
         url: fetch,
-        multiple: false,
+        multiple: true,
         infiniteScroll: true,
         items: [
           { column: 'contract_purchase_time', label: '日期' },
@@ -136,6 +137,9 @@ export default {
     }
   },
   methods: {
+    handleReset() {
+      this.$refs.table.refresh(true);
+    },
     handleRowSelect(data) {
       console.log(data);
     },

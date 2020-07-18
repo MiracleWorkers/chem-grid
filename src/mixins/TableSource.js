@@ -7,7 +7,6 @@ export default {
       if (!url) return; // fetch data not by url config
       this.showGridLoading();
       try {
-        this.pagination.currentPage = isReset ? 1 : this.pagination.currentPage; // 重置分页
         let fetchResponse = await this.$_pullResponseByAxiosType();
 
         const { list, total, page, count } = this.$GRID_RES_SCHEMA;
@@ -24,7 +23,9 @@ export default {
           this.$_setPinnedBottomRowData(_total);
         }
         // 3. 重新勾选之前选中
-        isReset ? (this.localSelected = []) : this.$_checkSelectedRow();
+        if (isReset) this.localSelected = [];
+        this.$_checkSelectedRow();
+
         // 4. 分页信息设置
         this.pagination.total = _page[count] || 0;
       } finally {
@@ -63,7 +64,8 @@ export default {
       }
     },
 
-    $_syncSelectedData() {
+    // clientSide模式勾选
+    $_clientSideSelectedData() {
       const _primaryKey = this.rowKey;
       const _currentPageData = [];
       this.gridApi.forEachNode(node => _currentPageData.push(node.data));
@@ -82,10 +84,17 @@ export default {
       this.localSelected = removeAfter;
     },
 
+    // serverSide模式勾选
+    $_serverSideSelectedData() {
+      this.localSelected = this.gridApi.getSelectedRows();
+    },
+
     $_checkSelectedRow() {
       const _primaryKey = this.rowKey;
-      this.gridApi.forEachNode(node => {
-        node.setSelected(this.localSelected.some(item => item[_primaryKey] === node.data[_primaryKey]));
+      this.$nextTick(() => {
+        this.gridApi.forEachNode(node => {
+          node.setSelected(this.localSelected.some(item => item[_primaryKey] === node.data[_primaryKey]));
+        });
       });
     },
 
@@ -93,25 +102,31 @@ export default {
     $_infiniteScroll() {
       const sourceData = {
         getRows: params => {
-          this.$_pullResponseByAxiosType().then(response => {
-            const { pipe } = this.config;
-            const { list, total, page, count } = this.$GRID_RES_SCHEMA;
-            let { [list]: _list = [], [total]: _total = {}, [page]: _page = {} } = response;
+          this.$_pullResponseByAxiosType()
+            .then(response => {
+              const { pipe } = this.config;
+              const { list, total, page, count } = this.$GRID_RES_SCHEMA;
+              let { [list]: _list = [], [total]: _total = {}, [page]: _page = {} } = response;
 
-            if (pipe && isFunction(pipe)) {
-              _list = pipe(_list);
-            }
+              if (pipe && isFunction(pipe)) {
+                _list = pipe(_list);
+              }
 
-            if (_total && Object.keys(_total).length) {
-              this.$_setPinnedBottomRowData(_total);
-            }
-            const lastRow = _page[count] > params.request.endRow ? null : _page[count];
-            params.successCallback(_list, lastRow);
-            this.pagination.currentPage += 1;
-          });
+              if (_total && Object.keys(_total).length) {
+                this.$_setPinnedBottomRowData(_total);
+              }
+              const lastRow = _page[count] > params.request.endRow ? null : _page[count];
+              params.successCallback(_list, lastRow);
+
+              this.pagination.currentPage += 1;
+            })
+            .catch(error => {
+              params.failCallback();
+              console.error(error);
+            });
         }
       };
-      this.gridApi.setServerSideDatasource(sourceData);
+      return sourceData;
     }
   }
 };

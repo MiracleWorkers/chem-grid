@@ -219,12 +219,14 @@ const tableConfig = {
 ```scss
 @import '~ag-grid-community/src/styles/ag-theme-balham/sass/ag-theme-balham-mixin';
 
+$THEME_COLOR: red; // 定义颜色
 .ag-theme-balham {
   @include ag-theme-balham(
     (
-      selected-row-background-color: rgba(blue, 0.25),
-      range-selection-background-color: rgba(blue, 0.2),
-      range-selection-border-color: blue
+      selected-row-background-color: rgba($THEME_COLOR, 0.25),
+      range-selection-background-color: rgba($THEME_COLOR, 0.2),
+      range-selection-highlight-color: rgba($THEME_COLOR, 0.35),
+      range-selection-border-color: $THEME_COLOR
     )
   );
 

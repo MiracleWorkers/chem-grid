@@ -131,6 +131,15 @@ export default {
         if (target) _filterItems.push({ ...item, label: target.name });
       });
       return _filterItems;
+    },
+
+    // 开启服务端无限加载时生成的配置
+    serverSideConfig() {
+      const serverConfig = {
+        cacheBlockSize: this.pagination.pageSize,
+        serverSideSortingAlwaysResets: true
+      };
+      return this.config.infiniteScroll ? serverConfig : {};
     }
   },
   methods: {
@@ -163,10 +172,15 @@ export default {
         aggregation: '<span class="ag-icon ag-icon-aggregation"></span>'
       };
 
+      const _rowSelection = () => {
+        if (infiniteScroll) return null;
+        return multiple ? 'multiple' : 'single';
+      };
+
       return {
         rowModelType: infiniteScroll ? 'serverSide' : 'clientSide',
         localeText: Object.freeze(localeText),
-        rowSelection: multiple ? 'multiple' : 'single',
+        rowSelection: _rowSelection(),
         suppressRowClickSelection: true,
         suppressDragLeaveHidesColumns: true, // 禁止列拖动隐藏
         rowDeselection: true, // 通过space取消选择
@@ -176,7 +190,7 @@ export default {
         statusBar: _statusBarConfig(), // 底部状态栏
         sideBar: _customizePanel, // 自定义侧边栏
         icons: _customizeIcon, // 自定义图标
-        // immutableColumns: true,
+        immutableColumns: true,
         ...this.$attrs
       };
     },
@@ -188,7 +202,7 @@ export default {
       const _columnDefs = [];
 
       const _isMultiple = multiple !== undefined ? multiple : defaultTableConfig.multiple;
-      if (_isMultiple) {
+      if (_isMultiple && infiniteScroll === false) {
         _columnDefs.push({
           colId: '_checkbox',
           pinned: 'left',
@@ -212,7 +226,8 @@ export default {
           suppressMenu: true,
           valueGetter: params => {
             if (infiniteScroll) {
-              return params.node.rowIndex + 1;
+              const value = params.data._rowNum;
+              return value ? value : params.node.rowIndex + 1;
             } else {
               const value = params.data._rowNum;
               const _currentPage = this.pagination.currentPage;
@@ -234,7 +249,7 @@ export default {
           hide: item.hide || defaultTableItemConfig.hide,
           resizable: true,
           filter: true,
-          menuTabs: ['generalMenuTab', 'filterMenuTab'],
+          menuTabs: infiniteScroll ? ['generalMenuTab'] : ['generalMenuTab', 'filterMenuTab'],
           valueFormatter: ({ value, data }) => {
             if (item.formatter) return item.formatter.call(null, value, data);
             return value;
@@ -296,12 +311,14 @@ export default {
       this.gridApi.hideOverlay();
     },
     // ag-grid可以进行多column排序，但日常业务中不多见，此处仅处理单sort的情况
+    // serverSlide情况下不用再调用刷新方法，默认会自己调用
     onSortChanged() {
       const _currentSortStatus = this.gridApi.getSortModel()[0];
       this.localParams[this.$GRID_SORT_PROPERTY] = _currentSortStatus
         ? `${_currentSortStatus.colId} ${_currentSortStatus.sort}`
         : '';
-      this.$_fetchSourceData();
+      if (this.config.infiniteScroll) this.pagination.currentPage = 1;
+      else this.$_fetchSourceData();
     },
     onRowDoubleClicked(params) {
       this.$emit('row-select', params.data);
@@ -333,7 +350,11 @@ export default {
       this.handleSyncStorageSet();
     },
     refresh(isReset = false) {
-      this.config.infiniteScroll ? this.$_infiniteScroll() : this.$_fetchSourceData(isReset);
+      this.pagination.currentPage = isReset ? 1 : this.pagination.currentPage;
+      this.gridApi.setSortModel({}); // 清除排序
+      this.config.infiniteScroll
+        ? this.gridApi.setServerSideDatasource(this.$_infiniteScroll())
+        : this.$_fetchSourceData(isReset);
     },
     setData(sourceData = []) {
       this.gridApi.setRowData(sourceData);
@@ -380,12 +401,13 @@ export default {
           rowData: this.gridData,
           frameworkComponents: this.registerComponents,
           getMainMenuItems: this.getCustomizeMenuItems,
-          getContextMenuItems: this.getContextMenuItems
+          getContextMenuItems: this.getContextMenuItems,
+          ...this.serverSideConfig
         },
         on: {
           ...this.$listeners,
           sortChanged: this.onSortChanged,
-          selectionChanged: this.$_syncSelectedData,
+          selectionChanged: this.$_clientSideSelectedData,
           rowDoubleClicked: this.onRowDoubleClicked,
           cellKeyDown: this.onCellKeyDown,
           columnMoved: this.onColumnMoved,
