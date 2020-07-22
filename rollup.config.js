@@ -30,6 +30,7 @@ export default {
     babel({
       exclude: 'node_modules/**',
       babelHelpers: 'runtime',
+      extensions: ['.js', '.jsx', '.es6', '.es', '.mjs', '.vue'],
       presets: [
         [
           '@babel/preset-env',
