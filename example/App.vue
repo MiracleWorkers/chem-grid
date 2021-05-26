@@ -40,7 +40,7 @@ export default {
       },
       tableConfig: {
         id: 'purch_dev',
-        multiple: false,
+        multiple: true,
         // infiniteScroll: true,
         url: '/pri/other_storage/get_goodseat_commodity_detail',
         items: [
